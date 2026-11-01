@@ -1,0 +1,16 @@
+mode = terminal
+import files
+
+// Paths are relative to this .in file.
+result = files.write("indium-note.txt", "Hello from Indium!\n")
+if result is error {
+    print("Write failed:", result.error)
+    stop()
+}
+
+read = files.read("indium-note.txt")
+if read is success {
+    print(read.value)
+} else {
+    print("Read failed:", read.error)
+}

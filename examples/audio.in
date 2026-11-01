@@ -1,0 +1,18 @@
+mode = terminal
+
+// Both OGG/Vorbis and PCM WAV are decoded and mixed by the built-in audio API.
+sound = audio.play("assets/tone.ogg", 0.5, true)
+sleep(0.05)
+print("OGG playing:", audio.playing(sound))
+audio.pause(sound)
+print("Paused:", not audio.playing(sound))
+audio.volume(sound, 0.25)
+audio.resume(sound)
+sleep(0.05)
+audio.stop(sound)
+
+wav = audio("assets/tone.wav", 0.3)
+sleep(0.1)
+print("WAV playing:", audio.playing(wav))
+audio.stop(wav)
+print("Stopped:", not audio.playing(wav))

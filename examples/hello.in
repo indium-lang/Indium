@@ -1,0 +1,13 @@
+mode = terminal
+
+name = "Indium"
+fn greet(who: text) {
+    print("Hello, " + who + "!")
+}
+greet(name)
+
+sum = 0
+for number in 1..11 {
+    sum += number
+}
+print("1 through 10 adds up to", sum)

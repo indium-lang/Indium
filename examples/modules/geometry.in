@@ -1,0 +1,9 @@
+import math
+
+fn circle_area(radius: decimal) -> decimal {
+    return math.pi * radius ** 2
+}
+
+fn rectangle_area(width, height) {
+    return width * height
+}

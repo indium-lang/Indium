@@ -1,0 +1,5 @@
+mode = terminal
+import "modules/geometry.in" as geometry
+
+print("Area of a circle with radius 3:", geometry.circle_area(3))
+print("Area of a 4 by 6 rectangle:", geometry.rectangle_area(4, 6))

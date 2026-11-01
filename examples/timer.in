@@ -1,0 +1,10 @@
+mode = terminal
+
+count = 0
+every 1 seconds {
+    count += 1
+    print("Timer fired", count, "times")
+    if count == 3 {
+        stop()
+    }
+} loop

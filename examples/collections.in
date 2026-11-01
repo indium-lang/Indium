@@ -1,0 +1,14 @@
+mode = terminal
+
+scores = [20, 49, 100]
+push(scores, 240)
+scores[0] += 2
+print("Scores:", scores, "last:", scores[-1])
+
+player = {name: "flight", score: 0, active: true}
+for score in scores {
+    player.score += score
+}
+print(player.name, "scored", player.score)
+print("Keys:", keys(player))
+print("Letters:", join(split("Indium", ""), " "))

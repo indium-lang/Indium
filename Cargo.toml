@@ -1,0 +1,26 @@
+[package]
+name = "indium"
+version = "0.1.0-alpha.1"
+edition = "2021"
+rust-version = "1.75"
+description = "The Indium programming language — a working pre-alpha interpreter"
+license = "LicenseRef-Indium-All-Rights-Reserved"
+default-run = "indium"
+
+[features]
+default = ["media"]
+media = ["dep:sdl2", "dep:image", "dep:fontdue", "dep:symphonia"]
+
+[dependencies]
+sdl2 = { version = "0.38.0", optional = true }
+image = { version = "0.24.9", optional = true, default-features = false, features = ["png", "jpeg", "bmp"] }
+fontdue = { version = "0.9.3", optional = true }
+symphonia = { version = "0.5.5", optional = true, default-features = false, features = ["ogg", "vorbis", "wav", "pcm"] }
+
+[profile.release]
+lto = true
+strip = true
+
+[[bin]]
+name = "indium"
+path = "src/main.rs"

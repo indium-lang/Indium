@@ -1,0 +1,15 @@
+mode = terminal
+
+fn make_counter(start: integer) -> function {
+    value = start
+    fn increment() -> integer {
+        value += 1
+        return value
+    }
+    return increment
+}
+
+first = make_counter(48)
+second = make_counter(99)
+print(first(), first(), second())
+// 49 50 100: each outer call creates its own captured state.

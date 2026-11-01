@@ -1,0 +1,12 @@
+mode = terminal
+
+fn divide(a: decimal, b: decimal) -> any {
+    if b == 0 { return error("Cannot divide by zero") }
+    return success(a / b)
+}
+
+answer = divide(12, 3)
+if answer is success { print("Answer:", answer.value) }
+
+problem = divide(12, 0)
+if problem is error { print("Handled error:", problem.error) }

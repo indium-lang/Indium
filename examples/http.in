@@ -1,0 +1,11 @@
+mode = terminal
+import net
+
+// Requires curl on PATH. Network failures are result values.
+response = net.get("https://example.com")
+if response is success {
+    print("HTTP status:", response.value.status)
+    print(response.value.body)
+} else {
+    print("Request failed:", response.error)
+}

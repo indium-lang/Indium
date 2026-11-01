@@ -1,0 +1,5 @@
+#!/bin/sh
+indium_root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd) || exit 1
+LD_LIBRARY_PATH="$indium_root/prebuilt/linux-x86_64/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH
+exec "$indium_root/prebuilt/linux-x86_64/indium" "$@"

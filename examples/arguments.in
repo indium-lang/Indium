@@ -1,0 +1,7 @@
+mode = terminal
+
+arguments = args()
+print("Number of arguments:", len(arguments))
+for argument in arguments {
+    print(argument)
+}

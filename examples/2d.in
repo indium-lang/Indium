@@ -1,0 +1,47 @@
+mode = 2d
+import game
+import time
+import math
+
+window.title = "Indium — OpenGL 2D"
+window.width = 960
+window.height = 600
+window.fps = 144
+window.vsync = false
+
+game.tps = 240
+x = 480.0
+y = 300.0
+vx = 180.0
+vy = 130.0
+
+every tick {
+    x += vx * game.dt
+    y += vy * game.dt
+    if x < 28 or x > window.width - 28 {
+        vx = -vx
+        x = math.clamp(x, 28, window.width - 28)
+    }
+    if y < 140 or y > window.height - 28 {
+        vy = -vy
+        y = math.clamp(y, 140, window.height - 28)
+    }
+    if input.key_down("left") { vx -= 120 * game.dt }
+    if input.key_down("right") { vx += 120 * game.dt }
+} loop
+
+every frame {
+    renderer.clear("#11121b")
+    renderer.rect(0, 0, window.width, 118, "#1e2032")
+    renderer.text("Indium", 28, 18, 40, "#dedaff")
+    renderer.text("240 TPS / independent rendering", 30, 70, 19, "#aaa9c4")
+    renderer.circle(x, y, 26, "indium")
+    renderer.outline(10, 128, window.width - 20, window.height - 138, "#38364f")
+    renderer.image("assets/checker.png", window.width - 88, 26)
+    renderer.text("Ticks: " + text(game.ticks), 28, window.height - 66, 18)
+    renderer.text("Arrows: speed   Space: OGG sound   F11: fullscreen   Esc: quit", 28, window.height - 38, 16)
+
+    if input.key_pressed("space") { audio("assets/tone.ogg", 0.5) }
+    if input.key_pressed("F11") { window.fullscreen = not window.fullscreen }
+    if input.key_pressed("escape") { stop() }
+} loop

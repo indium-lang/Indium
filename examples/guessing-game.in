@@ -1,0 +1,42 @@
+mode = terminal
+import math
+
+fn parse_guess(raw: text) {
+    cleaned = trim(raw)
+    if len(cleaned) == 0 or len(cleaned) > 3 {
+        return error("Enter one to three digits.")
+    }
+    for character in cleaned {
+        if not contains("0123456789", character) {
+            return error("Use whole-number digits only.")
+        }
+    }
+    number = integer(cleaned)
+    if number < 1 or number > 100 {
+        return error("Choose a number from 1 through 100.")
+    }
+    return success(number)
+}
+
+target = math.random_int(1, 100)
+attempts = 0
+won = false
+print("Guess the number from 1 through 100. You have seven valid guesses.")
+while attempts < 7 and not won {
+    parsed = parse_guess(input("Your guess: "))
+    if parsed is error {
+        print(parsed.error)
+        continue
+    }
+    guess = parsed.value
+    attempts += 1
+    if guess == target {
+        won = true
+        print("Correct! Guesses used:", attempts)
+    } else if guess < target {
+        print("Higher.")
+    } else {
+        print("Lower.")
+    }
+}
+if not won { print("Out of guesses. The number was", target) }
