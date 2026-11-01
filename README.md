@@ -4,6 +4,6 @@ programming language, the best one infact!!!!!!! super simple to write super com
 
 indium is currently quite unfinished, dont expect too much and please read the docs :3 
 
-indium is uhh uploading to github on like... sunday? i hope
+INDIUM IS OUT!!!!!!!!!!!!
 
 (no but like actually pls read the docs they have everything like install commands and everything abt the language)
