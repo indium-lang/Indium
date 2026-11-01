@@ -1,0 +1,2937 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Indium Handbook — 0.1.0-alpha.1</title>
+<style>
+:root{color-scheme:light;--ink:#202437;--muted:#5d6478;--accent:#5544bc;--line:#e1e4ee;--paper:#fff;--code:#f2f4fa}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:1.5rem}body{margin:0;background:#f7f8fc;color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}a:hover{text-decoration-thickness:2px}aside{position:fixed;inset:0 auto 0 0;width:280px;padding:2rem 1.5rem;background:var(--paper);border-right:1px solid var(--line);overflow:auto}
+.wordmark{font-size:1.7rem;font-weight:750;letter-spacing:-.045em}.edition{color:var(--muted);font-size:.82rem;margin:.2rem 0 1.2rem}.find{font-size:.82rem;color:var(--muted);padding:.7rem;background:var(--code);border-radius:8px}nav ol{padding-left:1.2rem}nav li{margin:.55rem 0;line-height:1.45}nav a{font-size:.9rem;text-decoration:none}
+main{max-width:1130px;margin:0 auto 0 280px;padding:3rem 3.5rem 6rem}.cover{padding-bottom:2rem;border-bottom:2px solid var(--line)}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.75rem;color:var(--accent);font-weight:700}.cover h1{font-size:3.4rem;line-height:1.1;letter-spacing:-.045em;margin:.5rem 0 1rem}.lede{font-size:1.15rem;color:var(--muted);max-width:65ch}.cover small{color:var(--muted)}
+.chapter{margin-top:4rem;padding:0 0 1rem;scroll-margin-top:2rem}.chapter>h1{font-size:2rem;line-height:1.2;border-bottom:1px solid var(--line);padding-bottom:1rem;margin:0 0 1.7rem;letter-spacing:-.025em}h2{font-size:1.35rem;line-height:1.3;margin:2.2rem 0 .9rem}h3{font-size:1.12rem;margin-top:1.7rem}p,ul,ol{max-width:80ch}li{padding-left:.15rem}p{margin:.85rem 0}strong{font-weight:650}
+code{font-family:ui-monospace,"Cascadia Code",Consolas,monospace;font-size:.88em;background:var(--code);border-radius:4px;padding:.12rem .3rem;overflow-wrap:anywhere}pre{background:#1e2233;color:#eef0fb;border:1px solid #30364e;border-radius:10px;padding:1.15rem 1.3rem;overflow:auto;line-height:1.6;margin:1.2rem 0}pre code{font-size:.86rem;padding:0;background:transparent;overflow-wrap:normal;white-space:pre}
+.table-scroll{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--line);border-radius:8px}table{width:100%;border-collapse:collapse;background:var(--paper);font-size:.9rem;line-height:1.55}th,td{text-align:left;padding:.8rem .9rem;border-bottom:1px solid var(--line);vertical-align:top}th{background:#eceff8;font-weight:650}tr:last-child td{border-bottom:0}td:first-child{min-width:130px}blockquote{margin-left:0;border-left:3px solid var(--accent);padding:.2rem 1rem;color:var(--muted)}.chapter-end{margin-top:2rem;font-size:.85rem}::selection{background:#dcd6ff}
+@media(min-width:1500px){main{margin-left:calc(280px + (100vw - 1500px)/2)}}@media(max-width:950px){aside{position:static;width:auto;border-right:0;border-bottom:1px solid var(--line)}nav ol{columns:2;column-gap:2rem}nav li{break-inside:avoid}main{margin:0;padding:2rem 1.3rem 4rem}.cover h1{font-size:2.5rem}.chapter{margin-top:3rem}}@media(max-width:540px){nav ol{columns:1}body{font-size:15px}th,td{padding:.65rem}pre{padding:.9rem}.chapter>h1{font-size:1.65rem}}
+@media print{body{background:#fff;font-size:10pt}aside,.chapter-end{display:none}main{max-width:none;margin:0;padding:0}.cover{break-after:page}.chapter{margin-top:0;break-before:page}h1,h2,h3{break-after:avoid}pre{white-space:pre-wrap;background:#f3f4f8;color:#111;break-inside:avoid}pre code{white-space:pre-wrap;font-size:8pt}.table-scroll{overflow:visible}table{font-size:8.5pt}a{color:#222;text-decoration:none}tr{break-inside:avoid}}
+</style></head><body>
+<aside id="contents"><div class="wordmark">Indium</div><div class="edition">HANDBOOK · 0.1.0-alpha.1</div><p class="find">One offline page. Use Ctrl+F to find a function, feature, or error message.</p><nav aria-label="Chapters"><ol><li><a href="#overview">Handbook overview</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#language">Language reference</a></li>
+<li><a href="#library">Standard library</a></li>
+<li><a href="#media">Graphics, input, and audio</a></li>
+<li><a href="#scheduling">Ticks, frames, and timers</a></li>
+<li><a href="#cli">Command-line reference</a></li>
+<li><a href="#recipes">Recipes</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#windows">Windows installation</a></li>
+<li><a href="#project">Building and project README</a></li>
+<li><a href="#architecture">Implementation map</a></li>
+<li><a href="#validation">Validation record</a></li>
+<li><a href="#third-party">Third-party components</a></li></ol></nav></aside>
+<main><header class="cover"><div class="eyebrow">The implemented language</div><h1>Indium handbook</h1><p class="lede">From your first .in file to functions, files, OpenGL graphics, audio, and independent simulation ticks.</p><p>Examples, exact API behavior, practical limits, and troubleshooting for the current pre-alpha.</p><small>Source: the Markdown chapters included in the project ZIP. Updated 29 October 2026. External links open only when you choose them; this handbook needs no network connection.</small></header>
+<section class="chapter" id="overview" aria-label="Handbook overview"><h1 id="overview-indium-handbook">Indium handbook</h1>
+<p>Documentation for <strong>0.1.0-alpha.1</strong>, covering the implementation shipped in this
+project. Examples use real Indium syntax. Proposed features are marked as
+unfinished rather than presented as working APIs.</p>
+<p>If you downloaded the release ZIP, open <strong>docs/guide.html</strong> for this entire
+handbook in one offline page. Use your browser&#39;s Find command to search it.</p>
+<h2 id="overview-start-here">Start here</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>What you will learn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#getting-started">Getting started</a></td>
+<td>Install the command, create a file, run your first program, and understand folders</td>
+</tr>
+<tr>
+<td><a href="#language">Language</a></td>
+<td>Values, types, operators, scopes, functions, collections, results, and imports</td>
+</tr>
+<tr>
+<td><a href="#library">Standard library</a></td>
+<td>Every built-in function, module, property, argument, and return value</td>
+</tr>
+<tr>
+<td><a href="#media">Graphics, input, and audio</a></td>
+<td>Create a window, draw, respond to controls, use fullscreen, and play sound</td>
+</tr>
+<tr>
+<td><a href="#scheduling">Ticks, frames, and timers</a></td>
+<td>Understand the program lifecycle, TPS/FPS, delta time, and recurring handlers</td>
+</tr>
+<tr>
+<td><a href="#cli">Command-line reference</a></td>
+<td>Commands, flags, program arguments, diagnostics, and execution limits</td>
+</tr>
+<tr>
+<td><a href="#recipes">Recipes</a></td>
+<td>Small programs and patterns you can adapt</td>
+</tr>
+<tr>
+<td><a href="#troubleshooting">Troubleshooting</a></td>
+<td>Fix common installation, syntax, type, graphics, and audio problems</td>
+</tr>
+<tr>
+<td><a href="#windows">Windows installation</a></td>
+<td>Installer details, updates, removal, and source-build requirements</td>
+</tr>
+<tr>
+<td><a href="#architecture">Implementation map</a></td>
+<td>How the Rust source is organized and how execution works</td>
+</tr>
+<tr>
+<td><a href="#validation">Validation record</a></td>
+<td>What has actually been tested and what still needs verification</td>
+</tr>
+</tbody></table></div>
+<p>New to programming? Read Getting started, then the Language chapter in order.
+Already comfortable with programming? Start with the Language and Standard
+library chapters, then use the others when you need them.</p>
+<h2 id="overview-what-this-release-can-do">What this release can do</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Current capability</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Execute source</td>
+<td>Run UTF-8 <code>.in</code> files through a Rust interpreter</td>
+</tr>
+<tr>
+<td>General programming</td>
+<td>Variables, scalar type checks, arithmetic, branches, loops, functions, closures, and recursion</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>Mutable lists/maps, text, lazy integer ranges, and success/error results</td>
+</tr>
+<tr>
+<td>Modules</td>
+<td>Built-in imports, relative local imports, aliases, cached module state</td>
+</tr>
+<tr>
+<td>Terminal</td>
+<td>Output, line input, command-line arguments, diagnostics</td>
+</tr>
+<tr>
+<td>Files</td>
+<td>Read, write, append, list, create directories, and remove files</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Blocking HTTP(S) GET/POST through an installed curl executable</td>
+</tr>
+<tr>
+<td>2D graphics</td>
+<td>OpenGL window, shapes, images, text, screenshots, keyboard/mouse input</td>
+</tr>
+<tr>
+<td>Audio</td>
+<td>Cached OGG/Vorbis and PCM WAV, volume, looping, pause/resume, multiple voices</td>
+</tr>
+<tr>
+<td>Timing</td>
+<td>Independent fixed simulation ticks, rendering frames, recurring timers</td>
+</tr>
+<tr>
+<td>Windows setup</td>
+<td>Install an already-built runtime for your account and add it to PATH</td>
+</tr>
+</tbody></table></div>
+<p>The language runtime is included in one executable plus SDL2&#39;s runtime library.
+Graphics and audio are available without an Indium package download or import.
+The Windows setup program installs the <strong>Indium interpreter</strong>.</p>
+<h2 id="overview-reading-the-examples">Reading the examples</h2>
+<p><code>name?</code> in a reference signature means an optional positional argument. It is
+documentation notation, not something you type. Function calls use positional
+arguments; there are no named arguments or default parameters on user functions.</p>
+<p>Examples labeled <strong>fragment</strong> need the surrounding program described nearby.
+Examples labeled <strong>error</strong> deliberately show code that fails. Other Indium code
+blocks are complete programs checked by the documentation verifier. Blocks
+marked <code>run</code> are also executed; graphics blocks marked <code>frames=3</code> run for three
+offscreen frames during documentation checks.</p>
+<p>Shell commands are separate from Indium source. Do not copy a terminal prompt
+such as <code>PS C:\Users\v&gt;</code> into either kind of code.</p>
+<h2 id="overview-shipped-programs">Shipped programs</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>File inside <code>examples/</code></th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hello.in</code></td>
+<td>Greeting, typed function, and a range sum</td>
+</tr>
+<tr>
+<td><code>factorial.in</code></td>
+<td>Function calls and factorials through 20!</td>
+</tr>
+<tr>
+<td><code>imports.in</code> / <code>modules/geometry.in</code></td>
+<td>Local module exports and built-in math</td>
+</tr>
+<tr>
+<td><code>collections.in</code></td>
+<td>Lists, maps, iteration, and text helpers</td>
+</tr>
+<tr>
+<td><code>arguments.in</code></td>
+<td>Read values after the CLI&#39;s <code>--</code> separator</td>
+</tr>
+<tr>
+<td><code>closures.in</code></td>
+<td>Return a function that keeps private mutable state</td>
+</tr>
+<tr>
+<td><code>results.in</code></td>
+<td>Return and inspect explicit success/error results</td>
+</tr>
+<tr>
+<td><code>guessing-game.in</code></td>
+<td>Interactive game with validated numeric input</td>
+</tr>
+<tr>
+<td><code>files.in</code></td>
+<td>Write and read a source-relative text file; this creates <code>indium-note.txt</code></td>
+</tr>
+<tr>
+<td><code>timer.in</code></td>
+<td>Run a recurring timer three times, then stop</td>
+</tr>
+<tr>
+<td><code>2d.in</code></td>
+<td>Moving ball, shapes, image, text, arrow keys, Space sound, F11, Escape</td>
+</tr>
+<tr>
+<td><code>audio.in</code></td>
+<td>OGG/WAV playback controls</td>
+</tr>
+<tr>
+<td><code>http.in</code></td>
+<td>Make an HTTP request and inspect its result; requires network access</td>
+</tr>
+</tbody></table></div>
+<p>The asset files supplied with these demos are described in
+<code>examples/assets/README.md</code>. Keep the example folder structure intact so relative
+imports and asset paths continue to work.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="getting-started" aria-label="Getting started"><h1 id="getting-started-getting-started">Getting started</h1>
+<p>Indium programs are plain UTF-8 text files ending in <code>.in</code>. The interpreter reads
+your file, checks it, and executes its statements.</p>
+<h2 id="getting-started-1-make-the-command-available">1. Make the command available</h2>
+<p>On Windows, build Indium once and run <code>install-windows.cmd</code>, or use the standalone
+<code>Install-Indium.cmd</code> with your existing build. The installer copies the runtime
+into a permanent per-user folder and adds its <code>bin</code> folder to your user PATH.
+Close all terminal windows and open a new terminal after installation.</p>
+<pre><code class="language-powershell">indium --version
+</code></pre>
+<p>The default build reports <code>indium 0.1.0-alpha.1 (OpenGL + audio)</code>. A build made
+with <code>--no-default-features</code> reports <code>(terminal-only)</code> instead. See
+<a href="#windows">Windows installation</a> for build requirements and the
+installer&#39;s exact behavior. You do not need Rust every time you run a program.</p>
+<p>On a compatible Linux machine, the release ZIP&#39;s <code>indium-linux</code> launcher can run
+the included runtime directly. From the project&#39;s main folder:</p>
+<pre><code class="language-sh">./indium-linux run examples/hello.in
+</code></pre>
+<p>That launcher is for Linux, not Windows. The README contains the Linux/macOS
+source-build instructions and system requirements.</p>
+<h2 id="getting-started-2-create-a-program">2. Create a program</h2>
+<p>Create a folder for your programs, open a text editor, and save this as
+<code>program.in</code>:</p>
+<pre><code class="language-indium">print(&quot;Hello, Indium!&quot;)
+</code></pre>
+<p>Choose UTF-8 text encoding without a byte-order mark (BOM). In Windows Notepad&#39;s
+Save As dialog, choose <strong>All files</strong> so it does not quietly save
+<code>program.in.txt</code>. Showing file extensions
+in File Explorer makes this easier to spot.</p>
+<p>Open a terminal in that folder. One way on Windows is to open the folder in
+File Explorer, click the address bar, type <code>powershell</code>, and press Enter.</p>
+<pre><code class="language-powershell">indium run program.in
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">Hello, Indium!
+</code></pre>
+<p>The command does not create an <code>.exe</code> for this program. It executes the <code>.in</code>
+source through the installed interpreter.</p>
+<h2 id="getting-started-3-understand-the-two-kinds-of-paths">3. Understand the two kinds of paths</h2>
+<p><strong>The path in the terminal command starts from your terminal&#39;s current folder.</strong>
+For example, from the main project folder:</p>
+<pre><code class="language-powershell">indium run .\examples\hello.in
+</code></pre>
+<p>From inside <code>examples</code>, use this instead:</p>
+<pre><code class="language-powershell">indium run .\hello.in
+</code></pre>
+<p>PATH lets the terminal find the <strong>Indium executable</strong>. It does not search for
+your program file. You can also give an absolute program path:</p>
+<pre><code class="language-powershell">indium run &quot;C:\Users\v\My Programs\program.in&quot;
+</code></pre>
+<p><strong>Paths inside Indium source start from that source file&#39;s folder.</strong> If
+<code>games/demo.in</code> calls <code>renderer.image(&quot;assets/player.png&quot;, ...)</code>, Indium looks
+for <code>games/assets/player.png</code>, regardless of your terminal&#39;s current folder.
+Local imports follow the same rule. An imported function uses its own defining
+file&#39;s folder for its file and asset operations.</p>
+<p>Inside an Indium string, use forward slashes in Windows paths or escape each
+backslash: <code>&quot;C:/Users/v/data.txt&quot;</code> or <code>&quot;C:\\Users\\v\\data.txt&quot;</code>.</p>
+<h2 id="getting-started-4-add-values-and-a-function">4. Add values and a function</h2>
+<p>Replace the contents of your file with:</p>
+<pre><code class="language-indium">name = &quot;flight&quot;
+score: integer = 0
+
+fn award(points: integer) -&gt; integer {
+    return points * 2
+}
+
+for round in 1..4 {
+    score += award(round)
+}
+
+if score &gt;= 10 {
+    print(name, &quot;scored&quot;, score)
+} else {
+    print(&quot;Keep going!&quot;)
+}
+</code></pre>
+<p>This prints <code>flight scored 12</code>. <code>1..4</code> produces 1, 2, and 3; the end is excluded.
+<code>score: integer</code> declares a type. <code>+=</code> updates the existing value. The function
+returns twice its argument, and the <code>if</code> branch checks a boolean condition.</p>
+<p>Newlines separate statements. Braces group blocks. Indentation makes the code
+readable, but does not define the blocks. You do not need <code>let</code>, <code>var</code>, a <code>main</code>
+function, or a semicolon at the end of each line.</p>
+<h2 id="getting-started-5-read-input-and-arguments">5. Read input and arguments</h2>
+<p>Terminal input reads one line as text:</p>
+<pre><code class="language-indium">name = trim(input(&quot;Your name: &quot;))
+print(&quot;Hello, &quot; + name + &quot;!&quot;)
+</code></pre>
+<p>For arguments supplied when launching a program:</p>
+<pre><code class="language-indium">values = args()
+print(&quot;Number of arguments:&quot;, len(values))
+for value in values {
+    print(value)
+}
+</code></pre>
+<p>Save that program as <code>arguments.in</code>, then:</p>
+<pre><code class="language-powershell">indium run arguments.in -- hello &quot;two words&quot;
+</code></pre>
+<p><code>args()</code> returns <code>[&quot;hello&quot;, &quot;two words&quot;]</code> as a list of text values. The <code>--</code>
+separates interpreter flags from arguments for your program.</p>
+<h2 id="getting-started-6-check-a-file-without-running-it">6. Check a file without running it</h2>
+<pre><code class="language-powershell">indium check program.in
+</code></pre>
+<p>This parses the program and checks names, known types, control flow, and local
+imports. It does not execute <code>print</code>, write files, open a window, or make HTTP
+requests. Some information is only known at runtime, so a successful check does
+not prove every operation will succeed.</p>
+<p>If a program fails, read its first error message. It includes the file, line,
+column, and usually the source line with a caret. A missing file and a type
+mismatch are different problems; <a href="#troubleshooting">Troubleshooting</a> explains
+the common messages.</p>
+<h2 id="getting-started-7-explore-the-included-demos">7. Explore the included demos</h2>
+<p>From the project&#39;s main folder, after installing the command:</p>
+<pre><code class="language-powershell">indium run examples\hello.in
+indium run examples\collections.in
+indium run examples\results.in
+indium run examples\closures.in
+indium run examples\2d.in
+</code></pre>
+<p>Run each command separately. The 2D demo stays open until you close its window
+or press Escape. Its controls are arrow keys for speed, Space for sound, and
+F11 for fullscreen. The filesystem, audio, interactive, and HTTP demos have
+side effects described in the handbook&#39;s example index.</p>
+<p>Continue with the <a href="#language">Language chapter</a>, or jump to
+<a href="#media">Graphics, input, and audio</a> to make a window.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="language" aria-label="Language reference"><h1 id="language-language-reference">Language reference</h1>
+<p>This chapter describes the implemented language. For a first program, read
+<a href="#getting-started">Getting started</a>. For function signatures, use the
+<a href="#library">Standard library</a>.</p>
+<p>Indium source files use UTF-8 and the <code>.in</code> extension. Newlines separate
+statements. Semicolons are optional separators when placing statements on one
+line. Blocks use braces. Comments use <code>//</code>, <code>#</code>, or nested <code>/* ... */</code>.
+Save UTF-8 without a BOM.</p>
+<h2 id="language-modes">Modes</h2>
+<pre><code class="language-indium">mode = terminal
+// Other implemented modes: background, 2d
+</code></pre>
+<p>Terminal is the default. <code>2d</code> creates an OpenGL-backed window after top-level
+initialization. <code>background</code> creates no graphics window, but does not detach the
+process or suppress an inherited console. Set the mode before the scheduler starts.</p>
+<h2 id="language-variables-and-values">Variables and values</h2>
+<pre><code class="language-indium">count = 49
+speed = 2.5
+name = &quot;Indium&quot;
+ready = true
+missing = none
+score: integer = 0
+position: decimal = 0
+anything: any = 49
+anything = &quot;can change type&quot;
+</code></pre>
+<p>A variable&#39;s first assignment defines it in the current lexical scope.
+Reassignment updates the nearest existing binding. Otherwise, the assignment
+creates a new local binding. Each block and function introduces a scope.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Annotation</th>
+<th>Values it accepts</th>
+<th>Typical value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>integer</code></td>
+<td>Signed 64-bit whole numbers</td>
+<td><code>49</code></td>
+</tr>
+<tr>
+<td><code>decimal</code></td>
+<td>Finite floating-point numbers; integer assignments widen</td>
+<td><code>2.5</code></td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>Immutable Unicode text</td>
+<td><code>&quot;hello&quot;</code></td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td>Exactly true or false</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>list</code></td>
+<td>Lists and this implementation&#39;s lazy ranges</td>
+<td><code>[1, 2]</code></td>
+</tr>
+<tr>
+<td><code>map</code></td>
+<td>Maps; local module values also use this coarse runtime category</td>
+<td><code>{name: &quot;Indium&quot;}</code></td>
+</tr>
+<tr>
+<td><code>function</code></td>
+<td>User functions and built-in function values</td>
+<td>A function name</td>
+</tr>
+<tr>
+<td><code>none</code></td>
+<td>Only the absence value</td>
+<td><code>none</code></td>
+</tr>
+<tr>
+<td><code>any</code></td>
+<td>Any value</td>
+<td>Use for intentionally changing types</td>
+</tr>
+</tbody></table></div>
+<p>These are the complete annotation names. There are no generics such as
+<code>list&lt;integer&gt;</code>, nullable-type syntax, or separate <code>result</code>/<code>module</code> annotations.
+Lists/maps do not enforce an element/field schema. Several special runtime
+values use the coarse <code>any</code> category internally; <code>type_of</code> provides extra names
+such as <code>&quot;result&quot;</code> and <code>&quot;module&quot;</code>. A built-in namespace and a local module are
+different internal value kinds, so do not rely on them sharing a <code>type_of</code> name.</p>
+<p>Inferred variable types remain fixed. A <code>decimal</code> binding accepts an integer by
+widening it; an <code>integer</code> binding does not silently accept decimals or text.
+An <code>any</code> annotation explicitly allows varying types. Function parameters can be
+annotated or inferred from each call. An unannotated function&#39;s return values
+may have different types across calls.</p>
+<p>For a value that starts absent and is filled in later, declare it <code>any</code>:</p>
+<pre><code class="language-indium">selected: any = none
+selected = &quot;first item&quot;
+print(selected)
+</code></pre>
+<p>Without the annotation, a variable initialized with <code>none</code> can only hold <code>none</code>.
+<code>any(value)</code> is an identity conversion; it does not change a variable&#39;s declared
+type. A typed parameter accepts the same assignment rules as a typed variable.
+An unannotated parameter gets its runtime binding type from that call&#39;s value;
+use <code>parameter: any</code> if its type must change within the function.</p>
+<p>Integers are signed 64-bit. Overflow raises an error. Decimals are finite 64-bit
+floating-point values. Division always produces a decimal; division by zero,
+non-finite results, and invalid mathematical domains raise errors. Numeric
+comparison between an integer and a decimal can lose integer precision; keep
+large integers as integers. Integer/integer equality and ordering remain exact;
+integer/decimal equality checks avoid rounding a large integer into a false
+match.</p>
+<p>Numeric literals may contain digit-separating underscores (<code>1_000_000</code>) and
+decimal exponents (<code>1.25e-3</code>). Use <code>0.5</code>, not <code>.5</code>, and <code>2.0</code>, not <code>2.</code>.</p>
+<p>An integer result stays integer for integer <code>+</code>, <code>-</code>, <code>*</code>, <code>%</code>, and valid integer
+<code>**</code>. Mixing a decimal into numeric arithmetic produces a decimal. <code>/</code> always
+produces a decimal, even for two integers. Decimal arithmetic has ordinary
+floating-point rounding; <code>0.1 + 0.2</code> should not be used as an exact decimal-money
+representation. There is no arbitrary-precision or fixed-point numeric type.</p>
+<p>Text accepts single or double quotes. Escapes: <code>\n</code>, <code>\r</code>, <code>\t</code>, <code>\0</code>, <code>\\</code>,
+<code>\&quot;</code>, <code>\&#39;</code>. Text literals cannot span physical lines. Indexing and length count
+Unicode scalar values, not bytes or grapheme clusters.</p>
+<p>For example, <code>len(&quot;äλ&quot;)</code> is 2 and <code>&quot;äλ&quot;[-1]</code> is <code>&quot;λ&quot;</code>. A visible character made
+from multiple combining scalars can have a length greater than 1. There is no
+raw-string prefix, string interpolation, triple-quoted literal, or <code>\u</code> escape;
+write Unicode characters directly in the UTF-8 source. Join strings with <code>+</code>
+and <code>text(value)</code>, or print separate values with <code>print</code>.</p>
+<h2 id="language-operators">Operators</h2>
+<p>From tighter to looser binding:</p>
+<ol>
+<li>Calls, member access, indexing.</li>
+<li><code>**</code> exponentiation (right associative).</li>
+<li>Unary <code>+</code>, unary <code>-</code>.</li>
+<li><code>*</code>, <code>/</code>, <code>%</code>.</li>
+<li><code>+</code>, <code>-</code>.</li>
+<li><code>..</code> (end-exclusive integer range).</li>
+<li><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>is</code>.</li>
+<li><code>==</code>, <code>!=</code>.</li>
+<li><code>not</code> / <code>!</code>.</li>
+<li><code>and</code> / <code>&amp;&amp;</code>.</li>
+<li><code>or</code> / <code>||</code>.</li>
+</ol>
+<p><code>not</code> and <code>!</code> negate the following comparison, so <code>not x is integer</code> means
+<code>not (x is integer)</code>. Conditions and logical operators require booleans;
+Indium does not implicitly treat numbers, lists, or text as true/false.
+Logical operators short-circuit. Use <code>a &lt; b and b &lt; c</code> rather than chained
+comparisons. Compound assignments: <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code>.</p>
+<p>Text concatenates with text using <code>+</code>. Lists concatenate with lists. Use
+<code>text(value)</code> when explicitly building text; <code>print</code> accepts values directly.
+Ranges iterate upwards and exclude the end. A range whose start exceeds its
+end is empty.</p>
+<pre><code class="language-indium">print(2 + 3 * 4)        // 14
+print(2 ** 3 ** 2)      // 512: 2 ** (3 ** 2)
+print(-2 ** 2)          // -4: -(2 ** 2)
+print(5 / 2)            // 2.5
+print(7 % 3)            // 1
+print(decimal(2) ** -1) // 0.5
+print(not 49 is text)   // true
+</code></pre>
+<p>For integer <code>base ** exponent</code>, the exponent must be an integer from 0 through
+4294967295, and the result must fit in 64 bits. Use a decimal base for negative
+or fractional powers. <code>math.pow</code> is another decimal-power option after importing
+math. There is no <code>**=</code> assignment, integer-division operator, bitwise operator,
+increment/decrement operator, ternary operator, or expression-form <code>if</code>.</p>
+<p>Compound assignment requires an already-existing target. <code>count += 1</code> does not
+declare <code>count</code>. An indexed/member assignment target is evaluated once before
+its right-hand side, so side effects in an index are not repeated.</p>
+<p><code>==</code> and <code>!=</code> can compare unlike types and return false/true as appropriate;
+numeric integer/decimal equality is the special numeric case described above.
+Ordering supports numbers and text with text. Text ordering is lexical, not
+locale-aware alphabetical sorting. Functions compare by identity, not by body.</p>
+<p>Logical operators require booleans on both evaluated sides. They do not return
+an arbitrary operand as a shortcut value. <code>false and dangerous()</code> and
+<code>true or dangerous()</code> do not call <code>dangerous</code>.</p>
+<h2 id="language-type-and-state-checks">Type and state checks</h2>
+<pre><code class="language-indium">print(49 is integer)
+print(&quot;hello&quot; is text)
+print(none is none)
+
+answer = success(49)
+if answer is success {
+    print(answer.value)
+}
+problem = error(&quot;something failed&quot;)
+if problem is error {
+    print(problem.error)
+}
+</code></pre>
+<p><code>is</code> checks a type, <code>none</code>, or a result variant. <code>==</code> compares values. They are
+not interchangeable. Applying <code>is success</code> to a non-result value is an error.
+Only the matching <code>.value</code> or <code>.error</code> result field can be read; <code>.ok</code> is always
+a boolean. Result constructors and functions returning results are ordinary
+values, not a general exception-handling system.</p>
+<p>There is no automatic result unwrapping, <code>try</code>/<code>catch</code>, <code>throw</code>, or <code>?</code> operator.
+User functions can return results too:</p>
+<pre><code class="language-indium">fn divide(a, b) {
+    if b == 0 {
+        return error(&quot;cannot divide by zero&quot;)
+    }
+    return success(a / b)
+}
+
+answer = divide(12, 3)
+if answer.ok {
+    print(answer.value) // 4
+} else {
+    print(answer.error)
+}
+</code></pre>
+<p><code>success(value)</code> and <code>error(value)</code> each take exactly one value. The payload can
+be any value, not just text. Use <code>is success</code>/<code>is error</code> or <code>.ok</code> before reading
+the matching field. <code>value is any</code> is always true; <code>none is none</code> tests absence.
+<code>is</code> is not an object-identity operator, and <code>value is &quot;hello&quot;</code> is invalid.</p>
+<h2 id="language-collections">Collections</h2>
+<pre><code class="language-indium">items = [1, 2, &quot;three&quot;]
+point = (10, 20) // parentheses with commas also form a list
+player = {name: &quot;flight&quot;, score: 0}
+items[0] = 49
+player.score += 10
+player[&quot;active&quot;] = true
+push(items, 240)
+print(items[-1], len(items), player.name)
+</code></pre>
+<p>Lists and maps are mutable reference values; assigning a collection to another
+variable aliases it. Elements can contain different types. Map keys are text;
+<code>record.field</code> is shorthand for <code>record[&quot;field&quot;]</code>. Map iteration visits keys in
+sorted order. Invalid indexes and missing keys raise errors. A negative index
+counts from the end. Text is immutable. <code>items.length</code> and <code>name.length</code> also
+report length.</p>
+<p>Lists/maps compare structurally, with a bounded depth for cyclic structures.
+Printing deeply nested/cyclic structures truncates after eight levels.</p>
+<p>List and text indexes start at zero. <code>-1</code> is the last item, <code>-2</code> the previous
+item. Reading or assigning outside the existing list bounds fails; assignment
+does not append. Use <code>push</code> to append and <code>pop</code> to remove the last item. There
+are no slicing, list-comprehension, <code>.push()</code>, or direct text-mutation methods.</p>
+<p><code>{}</code> and <code>[]</code> create empty collections. Map literal keys may be bare names or
+quoted text, but cannot be arbitrary key expressions. Use indexed assignment
+for a computed key. Duplicate keys in a map literal are rejected. Updating an
+existing key replaces its value; assigning a new text key adds it. A map does
+not preserve insertion order and has no key-deletion API yet.</p>
+<pre><code class="language-indium">items = [10, 20]
+alias = items
+alias[0] = 49
+copy = items + []
+copy[0] = 99
+print(items[0], copy[0]) // 49 99
+
+player = {}
+field = &quot;score&quot;
+player[field] = 240
+print(player.score)    // 240
+print(contains(player, &quot;missing&quot;)) // false
+</code></pre>
+<p>List concatenation creates a new outer list, but nested lists/maps remain
+shared references: it is a shallow copy, not a deep clone. <code>contains</code> tests a
+map key&#39;s presence before you access a possibly missing field. Map iteration
+and <code>keys(map)</code> visit sorted text keys.</p>
+<p><code>start..end</code> creates a lazy ascending range of integers. It can be iterated and
+passed to <code>len</code>.</p>
+<h2 id="language-functions-and-control-flow">Functions and control flow</h2>
+<pre><code class="language-indium">ready = true
+count = 3
+
+fn add(a, b) {
+    return a + b
+}
+
+fn double(n: integer) -&gt; integer {
+    return n * 2
+}
+
+if ready {
+    print(double(49))
+} else if count &gt; 10 {
+    print(&quot;more than ten&quot;)
+} else {
+    print(&quot;waiting&quot;)
+}
+
+for n in 0..10 {
+    if n == 3 { continue }
+    if n == 8 { break }
+    print(n)
+}
+
+while count &gt; 0 {
+    count -= 1
+}
+
+loop {
+    break
+}
+</code></pre>
+<p>Functions are visible throughout their enclosing block, so mutual recursion
+works. Variable initialization still occurs in source order. Calling a function
+before a captured variable has been initialized produces a runtime diagnostic.
+Functions are first-class values and retain lexical captures. A function without
+a return statement returns <code>none</code>. <code>break</code> and <code>continue</code> apply only to the
+current function&#39;s loops.</p>
+<p>For-loops snapshot a list/map&#39;s iteration values at loop entry. Mutating the
+original collection does not change the iteration sequence. Ranges are lazy.</p>
+<p><code>for</code> accepts ranges, lists, text, or maps. Text iteration gives one-scalar text
+values; map iteration gives keys, so fetch a value with <code>map[key]</code>. There is no
+two-variable key/value loop syntax. Each loop iteration has a fresh block scope.</p>
+<p>An assignment to an existing outer name updates that binding, even inside an
+<code>if</code> or function. A type annotation does not force a fresh shadowing binding.
+Function parameters and <code>for</code> iteration variables create their own bindings.</p>
+<pre><code class="language-indium">total = 0
+if true {
+    total += 5
+    temporary = &quot;only inside this block&quot;
+}
+print(total) // 5
+// Accessing temporary here would fail: it is out of scope.
+</code></pre>
+<p>There is no <code>let</code>/<code>var</code>/<code>const</code> declaration syntax. Built-in bindings, imported
+aliases, and declared function names are read-only; normal variables are mutable.
+Use a different name rather than trying to overwrite a built-in such as <code>print</code>.</p>
+<h2 id="language-functions-as-values-and-closures">Functions as values and closures</h2>
+<p>Pass a function by writing its name without parentheses. Add parentheses to
+call it. User functions require exactly the declared number of positional
+arguments. They have no optional, variadic, default, or named parameters.</p>
+<p>The <code>function</code> annotation accepts actual user/built-in function values. Some
+other kinds of value are also callable, including conversion types, <code>input</code>,
+<code>audio</code>, and result constructors, but are not in that runtime type category.
+Use <code>any</code> for a parameter meant to accept those general callable values.</p>
+<pre><code class="language-indium">fn twice(value: integer) -&gt; integer {
+    return value * 2
+}
+
+fn apply(operation: function, value) {
+    return operation(value)
+}
+
+chosen = twice
+print(apply(chosen, 21)) // 42
+</code></pre>
+<p>A function can declare and return another named function. It retains access
+to the environment where it was created, even after the outer function returns:</p>
+<pre><code class="language-indium">fn make_counter() {
+    value = 0
+    fn next() {
+        value += 1
+        return value
+    }
+    return next
+}
+
+counter = make_counter()
+another = make_counter()
+print(counter(), counter(), another()) // 1 2 1
+</code></pre>
+<p>These are lexical closures. There are no anonymous/lambda function expressions
+yet. A function name is available throughout its enclosing block, which allows
+forward calls and mutual recursion. Captured variables still need to have been
+initialized before the call uses them. Recursive algorithms must respect the
+runtime&#39;s depth limits.</p>
+<p><code>return</code> ends the function immediately, including from nested loops. Bare
+<code>return</code> and falling off the end return <code>none</code>; an annotated non-<code>none</code> return
+type will reject that value. There is no implicit return of the final expression.
+<code>return</code> at top level or directly inside a recurring handler is invalid.</p>
+<h2 id="language-imports">Imports</h2>
+<pre><code class="language-indium">import math
+import files as fs
+import game
+import &quot;modules/geometry.in&quot; as geometry
+</code></pre>
+<p>Built-in modules: <code>math</code>, <code>files</code>, <code>net</code>, <code>time</code>, <code>game</code>, <code>text</code>.
+Window, rendering, input, and audio APIs are available without imports.
+<code>text</code> also remains a conversion/type name; its text helpers are accessible as
+members, with or without <code>import text</code>.</p>
+<p>Local module paths are relative to the importing source file. Their extension
+must be <code>.in</code>. Without an alias, the filename stem is used. Imports are checked
+recursively, loaded once, and cached by canonical path. Circular imports are
+reported. Import errors preserve the failing file and source position.</p>
+<p>A module exports its own declarations except names starting with <code>_</code>. Built-in
+names inherited by a module are not re-exported. Module fields can be read;
+mutating module state should happen through its exported functions. A module
+function&#39;s file and asset paths remain relative to the defining module.</p>
+<p>Use <code>as</code> to choose a convenient alias or fix a filename that is not a valid
+identifier. Without an alias, a local file&#39;s stem is used, with hyphens changed
+to underscores. Local modules are not found by a package search path; use an
+explicit relative or absolute <code>.in</code> path.</p>
+<p>All local imports are loaded and checked before execution, including imports
+inside functions or a branch that would not run. A module&#39;s top-level statements
+execute when its import actually runs, once per canonical file path. Reimporting
+the same file under another alias shares its state rather than creating a copy.</p>
+<p>Local module fields cannot be directly rebound with <code>module.score = 10</code>.
+Exported functions can update their captured module variables. Exported
+collections are reference values, so mutating an exported list/map affects the
+shared collection. Names starting with <code>_</code> are inaccessible through exports,
+not a general security boundary around the file&#39;s behavior.</p>
+<p>See <code>examples/imports.in</code> and <code>examples/modules/geometry.in</code> for a runnable
+two-file program. Use simple filenames and keep modules in a project folder
+alongside their assets.</p>
+<h2 id="language-recurring-execution">Recurring execution</h2>
+<pre><code class="language-indium">mode = 2d
+import game
+import time
+game.tps = 240
+fn update() {}
+
+every frame {
+    renderer.clear(&quot;black&quot;)
+} loop
+
+every tick {
+    update()
+} loop
+
+every 5 seconds {
+    print(&quot;Ping&quot;)
+} loop
+</code></pre>
+<p>Handlers must be declared at module level after the variables they use. The
+trailing <code>loop</code> token is required. Timers also accept <code>second</code>, <code>milliseconds</code>,
+and <code>millisecond</code>. An interval expression is evaluated once at registration.</p>
+<p>All top-level initialization finishes before the scheduler begins. Tick, frame,
+and timer handlers share the language&#39;s normal lexical scopes. Statements inside
+a handler run in a fresh block scope each invocation; assignments to existing
+outer variables persist.</p>
+<p>Simulation uses an accumulator and <code>game.dt = 1 / game.tps</code>. Render timing uses
+<code>time.dt</code>. Rendering FPS does not set simulation TPS. The scheduler sleeps until
+the next relevant deadline instead of waiting for a render frame before
+considering ticks. A blocking render, HTTP call, sleep, or long handler can still
+delay work because the runtime is single-threaded.</p>
+<p><code>game.max_catchup</code> defaults to 8 ticks per scheduler iteration. Missed tick time
+beyond that bound is discarded and counted in <code>game.dropped_ticks</code>; it is not
+replayed in an unbounded catch-up loop. Raise the bound for high TPS with very
+low FPS. An overdue timer fires once and advances to its next scheduled interval,
+skipping missed invocations. This keeps its cadence without bursts.</p>
+<p>Call <code>stop()</code>, <code>game.stop()</code>, or <code>window.close()</code> to finish. Closing the native
+window also exits. A terminal/background program with handlers remains alive
+until stopped; one without handlers finishes after its statements run.</p>
+<p>See <a href="#scheduling">Ticks, frames, and timers</a> for the lifecycle, exact counters,
+overload behavior, timer interval limits, and a complete stopped timer example.</p>
+<h2 id="language-names-layout-and-syntax-boundaries">Names, layout, and syntax boundaries</h2>
+<p>Identifiers are case-sensitive. They start with <code>_</code> or a Unicode alphabetic
+character, followed by alphabetic/numeric characters or <code>_</code>. <code>score</code> and <code>Score</code>
+are different names. Avoid reserved words and built-in names for your variables.</p>
+<p>Control words are <code>fn</code>, <code>if</code>, <code>else</code>, <code>while</code>, <code>for</code>, <code>in</code>, <code>loop</code>, <code>break</code>,
+<code>continue</code>, <code>return</code>, <code>import</code>, <code>as</code>, <code>every</code>, and <code>is</code>. <code>true</code>, <code>false</code>, <code>none</code>,
+mode names, and <code>success</code>/<code>error</code> also have special language meaning.
+<code>and</code>/<code>or</code>/<code>not</code> are operators. Tick/frame and time-unit words are interpreted
+in their handler context.</p>
+<p>Lists, maps, calls, and parameter lists support comma-separated multiline
+layout and trailing commas. Parentheses containing a comma form a list:
+<code>(49,)</code> is a one-item list, <code>(49)</code> groups a value, and <code>()</code> is not an empty-list
+literal. Use <code>[]</code> for an empty list.</p>
+<p>Keep binary operators with the expression they continue, for example end a
+continued line with <code>+</code>. A newline that is not consumed by a larger expression
+separates statements. There is no backslash line-continuation syntax.</p>
+<p>Some familiar-looking forms are intentionally absent: assignment is a
+statement rather than an expression; <code>=</code> does not test equality; <code>in</code> belongs
+to a <code>for</code> loop rather than a membership expression; and there is no <code>match</code>,
+<code>switch</code>, <code>do/while</code>, <code>elif</code>, <code>class</code>, or <code>struct</code> statement.</p>
+<h2 id="language-implementation-limits">Implementation limits</h2>
+<ul>
+<li>Interpreted execution; no native compilation yet.</li>
+<li>Syntax nesting/chains are limited to 128, local import depth to 64.</li>
+<li>At most 32 nested execution blocks/function calls and 64 simultaneous expression evaluations;
+either guard may trigger first. There is no tail-call optimization.</li>
+<li><code>--max-steps N</code> optionally bounds execution; normal runs have no instruction
+budget. <code>--frames N</code> bounds rendered frames for graphics smoke tests.</li>
+<li>Names and known scalar types are checked before execution; dynamic module,
+collection, and callable values receive further checks at runtime.</li>
+<li>Closures and cyclic collections use reference counting, without a tracing
+collector. Reference cycles can retain memory for the life of the process.</li>
+<li>No user-defined structs/classes/enums, named/default arguments, destructuring,
+exception syntax, async language features, or package installation yet.</li>
+</ul>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="library" aria-label="Standard library"><h1 id="library-standard-library-reference">Standard-library reference</h1>
+<p>Unless stated otherwise, invalid argument types/counts produce source-location
+diagnostics. <code>none</code> is the normal return value for actions without a value.
+All filesystem and asset paths resolve relative to the executing source file.</p>
+<p><code>?</code> marks an optional <strong>positional</strong> argument in the signatures below. It is
+reference notation, not syntax. A return value of <code>none</code> means an action
+completed without producing data. Runtime diagnostics abort execution; explicit
+<code>success(...)</code>/<code>error(...)</code> results are ordinary values your code can inspect.</p>
+<h2 id="library-what-needs-an-import">What needs an import</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Names</th>
+<th>How to access them</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>General helpers, scalar conversions, collection/text helpers, <code>success</code>, <code>error</code></td>
+<td>Already available</td>
+</tr>
+<tr>
+<td><code>window</code>, <code>renderer</code>, <code>input</code>, <code>audio</code></td>
+<td>Already available; media support is part of the default build</td>
+</tr>
+<tr>
+<td><code>math</code>, <code>files</code>, <code>net</code>, <code>time</code>, <code>game</code></td>
+<td>Import the namespace first, for example <code>import math</code></td>
+</tr>
+<tr>
+<td><code>text</code> helper namespace</td>
+<td>Available through <code>text</code>; <code>import text</code> is also accepted</td>
+</tr>
+</tbody></table></div>
+<p>An alias such as <code>import files as fs</code> uses the same APIs as the original name.
+Properties use <code>module.name</code>; functions add parentheses. For example,
+<code>time.elapsed</code> is a property and <code>time.now()</code> is a function.</p>
+<h2 id="library-terminal-and-general-helpers">Terminal and general helpers</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>API</th>
+<th>Returns</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>print(values...)</code></td>
+<td><code>none</code></td>
+<td>Format any number of values, separated by spaces, followed by a newline</td>
+</tr>
+<tr>
+<td><code>write(values...)</code></td>
+<td><code>none</code></td>
+<td>Same spacing, without the final newline; output is flushed</td>
+</tr>
+<tr>
+<td><code>input(prompt?)</code> / <code>input.read(prompt?)</code></td>
+<td><code>text</code></td>
+<td>Optionally format/print one prompt, then read one line without its line ending</td>
+</tr>
+<tr>
+<td><code>type_of(value)</code></td>
+<td><code>text</code></td>
+<td>Return the runtime type name</td>
+</tr>
+<tr>
+<td><code>assert(condition, message?)</code></td>
+<td><code>none</code></td>
+<td>Require a boolean; a false condition raises the provided formatted message or <code>Assertion failed</code></td>
+</tr>
+<tr>
+<td><code>args()</code></td>
+<td><code>list</code></td>
+<td>Text arguments provided after the CLI <code>--</code> separator</td>
+</tr>
+<tr>
+<td><code>stop()</code></td>
+<td><code>none</code></td>
+<td>End execution normally; takes no exit-code argument</td>
+</tr>
+<tr>
+<td><code>sleep(seconds)</code></td>
+<td><code>none</code></td>
+<td>Block the runtime thread for a number of seconds in 0..86400</td>
+</tr>
+</tbody></table></div>
+<p><code>print()</code> emits a blank line. <code>write()</code> with no arguments emits nothing. Lists,
+maps, results, and other values are printed in a human-readable representation,
+not serialized JSON. Printing a decimal can look like an integer (<code>1.0</code> prints
+as <code>1</code>); use <code>type_of</code> or <code>is decimal</code> to inspect its type.</p>
+<p><code>input</code> accepts zero or one prompt value; prompts need not be text because they
+are formatted. An empty line returns <code>&quot;&quot;</code>. End-of-input also yields empty text,
+so a loop should not assume it will always receive another nonempty answer.
+Input failures are diagnostics. <code>input.read</code> is terminal input, distinct from
+the same namespace&#39;s keyboard/mouse functions.</p>
+<pre><code class="language-indium">print(&quot;Score:&quot;, 49)
+write(&quot;No newline yet. &quot;)
+print(&quot;Now there is one.&quot;)
+assert(49 &gt; 0, &quot;Score must be positive&quot;)
+print(type_of(49), type_of(49.0)) // integer decimal
+</code></pre>
+<h2 id="library-conversions-and-result-constructors">Conversions and result constructors</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>API</th>
+<th>Accepted input</th>
+<th>Return value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>integer(value)</code></td>
+<td>Integer, decimal, integer text, boolean</td>
+<td>Integer; booleans become 1/0</td>
+</tr>
+<tr>
+<td><code>decimal(value)</code></td>
+<td>Integer, decimal, numeric text</td>
+<td>Finite decimal</td>
+</tr>
+<tr>
+<td><code>text(value)</code></td>
+<td>Any value</td>
+<td>Formatted text</td>
+</tr>
+<tr>
+<td><code>boolean(value)</code></td>
+<td>Boolean or exactly <code>&quot;true&quot;</code>/<code>&quot;false&quot;</code> text</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>list(value)</code></td>
+<td>A value already in the list category, including a range</td>
+<td>The same value; does not collect a range</td>
+</tr>
+<tr>
+<td><code>map(value)</code></td>
+<td>A value already in the map category</td>
+<td>The same map-category value</td>
+</tr>
+<tr>
+<td><code>function(value)</code></td>
+<td>User function or built-in function value</td>
+<td>The same function</td>
+</tr>
+<tr>
+<td><code>any(value)</code></td>
+<td>Any value</td>
+<td>The original value unchanged</td>
+</tr>
+<tr>
+<td><code>success(value)</code></td>
+<td>Any payload</td>
+<td>Successful result</td>
+</tr>
+<tr>
+<td><code>error(value)</code></td>
+<td>Any payload</td>
+<td>Failed result</td>
+</tr>
+</tbody></table></div>
+<p><code>integer(decimal)</code> truncates toward zero and checks the signed 64-bit bounds.
+Numeric text conversions trim surrounding whitespace. Boolean text conversion
+does not trim or ignore case: <code>&quot;True&quot;</code> and <code>&quot; true &quot;</code> are invalid. <code>decimal(true)</code>
+is invalid; <code>integer(true)</code> is valid. Invalid conversions raise a diagnostic;
+they do not return an error result. <code>list()</code> and <code>map()</code> with no arguments are
+invalid: use <code>[]</code> and <code>{}</code> to create empty collections.</p>
+<p><code>any(value)</code> does not make a new variable dynamically typed; use <code>name: any = ...</code>
+for that. Collection/function conversions do not clone or transform the value.
+There is no callable <code>none()</code> constructor; <code>none</code> is the literal absence value.</p>
+<pre><code class="language-indium">print(integer(&quot; 22 &quot;), integer(-2.9), integer(true)) // 22 -2 1
+print(decimal(&quot;2.5&quot;), boolean(&quot;false&quot;))             // 2.5 false
+result = success({answer: 49})
+print(result.ok, result.value.answer)               // true 49
+failure = error(&quot;not found&quot;)
+if failure is error { print(failure.error) }
+</code></pre>
+<p>Result properties are <code>.ok</code> (always boolean), <code>.value</code> (successful payload only),
+and <code>.error</code> (failed payload only). Wrong-state field access raises a diagnostic.
+Type annotations have no separate <code>result</code> name; a function can return a result
+without annotating its return, or use <code>-&gt; any</code>.</p>
+<h2 id="library-lists-maps-and-text">Lists, maps, and text</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>API</th>
+<th>Returns</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>len(value)</code></td>
+<td>Integer</td>
+<td>Number of text scalars, list items, map entries, or range items</td>
+</tr>
+<tr>
+<td><code>push(list, value)</code></td>
+<td><code>none</code></td>
+<td>Append to the same mutable list</td>
+</tr>
+<tr>
+<td><code>pop(list)</code></td>
+<td>Removed value or <code>none</code></td>
+<td>Remove the last item; empty list returns <code>none</code></td>
+</tr>
+<tr>
+<td><code>keys(map)</code></td>
+<td>List of text</td>
+<td>Sorted keys of an actual map</td>
+</tr>
+<tr>
+<td><code>contains(container, value)</code></td>
+<td>Boolean</td>
+<td>Substring for text, structural value membership for lists, text-key membership for maps</td>
+</tr>
+<tr>
+<td><code>split(text, separator)</code></td>
+<td>List of text</td>
+<td>Split on every occurrence of the literal text separator</td>
+</tr>
+<tr>
+<td><code>join(list, separator)</code></td>
+<td>Text</td>
+<td>Format every list value, then join with the text separator</td>
+</tr>
+<tr>
+<td><code>replace(text, from, to)</code></td>
+<td>Text</td>
+<td>Replace all occurrences of the literal <code>from</code> text</td>
+</tr>
+<tr>
+<td><code>trim(text)</code></td>
+<td>Text</td>
+<td>Remove surrounding Unicode whitespace</td>
+</tr>
+<tr>
+<td><code>upper(text)</code></td>
+<td>Text</td>
+<td>Unicode uppercase conversion</td>
+</tr>
+<tr>
+<td><code>lower(text)</code></td>
+<td>Text</td>
+<td>Unicode lowercase conversion</td>
+</tr>
+</tbody></table></div>
+<p>The text helpers are also available through <code>text.len</code>, <code>text.contains</code>,
+<code>text.split</code>, <code>text.join</code>, <code>text.replace</code>, <code>text.trim</code>, <code>text.upper</code>, <code>text.lower</code>.
+Splitting on an empty separator follows Rust&#39;s split convention, including an
+empty fragment at each end.</p>
+<p>For membership in text or a map, the second argument must be text. List
+membership compares values structurally. A lazy range is usable with <code>len</code>
+and <code>for</code>, but is not accepted by <code>push</code>, <code>pop</code>, <code>join</code>, or <code>contains</code> as a list
+container. <code>keys</code> expects an actual map rather than a local module view.</p>
+<p><code>items.length</code> and <code>name.length</code> are property shortcuts for list/text lengths.
+Maps and ranges use <code>len</code> rather than <code>.length</code>. The text namespace aliases have
+the same argument rules as the global helpers; for example, <code>text.len</code> is the
+same implementation as <code>len</code>, not a separate method on a text instance.</p>
+<p>The operations return new text; the original string is immutable. <code>split</code> is
+not a regular-expression splitter or automatic whitespace tokenizer. Literal
+adjacent separators produce empty fragments; <code>split(&quot;a,,b&quot;, &quot;,&quot;)</code> has three
+items, with empty text in the middle. <code>join</code> accepts mixed list items because it
+formats them. No sort, reverse, slice, regex, binary buffer, JSON parser, or
+deep-copy helper is built in yet.</p>
+<pre><code class="language-indium">items = [&quot;one&quot;, &quot;two&quot;]
+push(items, &quot;three&quot;)
+print(pop(items), len(items))                  // three 2
+record = {z: 3, a: 1}
+print(keys(record), contains(record, &quot;a&quot;))     // [a, z] true
+print(join([49, true, &quot;items&quot;], &quot; | &quot;))       // 49 | true | items
+print(replace(&quot;a-b-a&quot;, &quot;a&quot;, &quot;x&quot;))             // x-b-x
+print(upper(trim(&quot; indium &quot;)))               // INDIUM
+</code></pre>
+<h2 id="library-math--import-math">Math — <code>import math</code></h2>
+<p>Constants are read-only decimals: <code>math.pi</code>, <code>math.tau</code> (two pi), and <code>math.e</code>.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Returns</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>math.sqrt(x)</code></td>
+<td>Decimal</td>
+<td>Square root; x must not produce an invalid domain</td>
+</tr>
+<tr>
+<td><code>math.abs(x)</code></td>
+<td>Integer for integer x, otherwise decimal</td>
+<td>Absolute value; minimum integer overflows</td>
+</tr>
+<tr>
+<td><code>math.floor(x)</code></td>
+<td>Decimal</td>
+<td>Round down, including toward more-negative values</td>
+</tr>
+<tr>
+<td><code>math.ceil(x)</code></td>
+<td>Decimal</td>
+<td>Round up</td>
+</tr>
+<tr>
+<td><code>math.round(x)</code></td>
+<td>Decimal</td>
+<td>Nearest integer-valued decimal; halfway cases round away from zero</td>
+</tr>
+<tr>
+<td><code>math.sin(x)</code></td>
+<td>Decimal</td>
+<td>Sine, with x in radians</td>
+</tr>
+<tr>
+<td><code>math.cos(x)</code></td>
+<td>Decimal</td>
+<td>Cosine, with x in radians</td>
+</tr>
+<tr>
+<td><code>math.tan(x)</code></td>
+<td>Decimal</td>
+<td>Tangent, with x in radians</td>
+</tr>
+<tr>
+<td><code>math.log(x)</code></td>
+<td>Decimal</td>
+<td>Natural logarithm; a finite valid result is required</td>
+</tr>
+<tr>
+<td><code>math.exp(x)</code></td>
+<td>Decimal</td>
+<td>e raised to x</td>
+</tr>
+<tr>
+<td><code>math.pow(base, exponent)</code></td>
+<td>Decimal</td>
+<td>Floating-point power</td>
+</tr>
+<tr>
+<td><code>math.min(a, b)</code></td>
+<td>Integer if both inputs are integer, otherwise decimal</td>
+<td>Smaller input</td>
+</tr>
+<tr>
+<td><code>math.max(a, b)</code></td>
+<td>Integer if both inputs are integer, otherwise decimal</td>
+<td>Larger input</td>
+</tr>
+<tr>
+<td><code>math.clamp(value, minimum, maximum)</code></td>
+<td>Decimal</td>
+<td>Limit value to ordered bounds; minimum must not exceed maximum</td>
+</tr>
+<tr>
+<td><code>math.random()</code></td>
+<td>Decimal</td>
+<td>Pseudorandom value in <code>[0, 1)</code></td>
+</tr>
+<tr>
+<td><code>math.random_int(minimum, maximum)</code></td>
+<td>Integer</td>
+<td>Integer between both inclusive integer bounds</td>
+</tr>
+<tr>
+<td><code>math.seed(seed)</code></td>
+<td><code>none</code></td>
+<td>Set the generator from an integer seed; zero uses the fallback seed 49</td>
+</tr>
+</tbody></table></div>
+<p>Except where integer-only arguments are stated, math arguments accept integers
+or decimals. All results must be finite; invalid domains and overflow raise
+diagnostics. <code>floor</code>, <code>ceil</code>, and <code>round</code> return decimals even when printed as
+whole numbers; use <code>integer(...)</code> if you need an integer index.</p>
+<p>The random generator is a simple xorshift, not a cryptographic source. Repeating
+a seed and the same sequence of random calls gives repeatable results for this
+implementation; avoid treating its exact sequence as a permanent file format.</p>
+<pre><code class="language-indium">import math
+print(math.sqrt(49), math.min(3, 8), math.clamp(30, 0, 5)) // 7 3 5
+print(math.floor(-1.2), math.ceil(-1.2), math.round(-2.5)) // -2 -1 -3
+print(integer(math.floor(4.9)))                          // 4
+math.seed(49)
+first = math.random()
+math.seed(49)
+assert(first == math.random())
+print(math.random_int(4, 4))                             // 4
+</code></pre>
+<h2 id="library-files--import-files">Files — <code>import files</code></h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>API</th>
+<th>Return value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>files.read(path)</code></td>
+<td>Result containing UTF-8 text</td>
+</tr>
+<tr>
+<td><code>files.write(path, text)</code></td>
+<td>Result containing <code>none</code>; overwrite/create file</td>
+</tr>
+<tr>
+<td><code>files.append(path, text)</code></td>
+<td>Result containing <code>none</code>; append/create file</td>
+</tr>
+<tr>
+<td><code>files.exists(path)</code></td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td><code>files.list(path)</code></td>
+<td>Result containing sorted entry names</td>
+</tr>
+<tr>
+<td><code>files.mkdir(path)</code></td>
+<td>Result containing <code>none</code>; create directories recursively</td>
+</tr>
+<tr>
+<td><code>files.remove(path)</code></td>
+<td>Result containing <code>none</code>; remove one file</td>
+</tr>
+</tbody></table></div>
+<p>Operational I/O failures return <code>error(message)</code>; successful operations return
+<code>success(value)</code>. There is no recursive deletion API.</p>
+<p>Arguments are text paths; <code>write</code>/<code>append</code> also require text content. A bad
+argument type is a diagnostic rather than an I/O result. <code>read</code> expects UTF-8
+text, not arbitrary binary bytes. <code>write</code> overwrites an existing file rather
+than appending. <code>write</code> and <code>append</code> do not create missing parent directories;
+use <code>mkdir</code> first when needed.</p>
+<p><code>exists</code> also returns true for an existing directory. It does not guarantee a
+later operation will succeed. <code>list</code> lists one directory&#39;s entry names in sorted
+order, not full paths or a recursive tree. <code>remove</code> removes a file, not a
+directory tree. Access is governed by normal operating-system permissions.</p>
+<p>Example that reads a file if present (checking alone does not perform the read):</p>
+<pre><code class="language-indium">import files
+result = files.read(&quot;notes.txt&quot;)
+if result is success {
+    print(result.value)
+} else {
+    print(&quot;Could not read notes:&quot;, result.error)
+}
+</code></pre>
+<p>Write with explicit outcome handling:</p>
+<pre><code class="language-indium">import files
+written = files.write(&quot;notes.txt&quot;, &quot;Hello from Indium!\n&quot;)
+if written is error {
+    print(&quot;Could not save:&quot;, written.error)
+    stop()
+}
+</code></pre>
+<p>The second example creates/overwrites <code>notes.txt</code> beside its source file when
+executed. Both relative and absolute paths are accepted. An imported function&#39;s
+path is relative to its defining file, not to the file that called it.</p>
+<h2 id="library-http--import-net">HTTP — <code>import net</code></h2>
+<p><code>net.get(url)</code> and <code>net.post(url, body)</code> use the installed <code>curl</code> program through
+argument-based process spawning, without a shell. HTTP(S) only, 15-second timeout,
+16 MiB response cap, normal TLS validation, and no automatic redirects.</p>
+<p>On transport success, the result contains <code>{status: integer, body: text}</code>.
+HTTP error status codes such as 404 are still transport successes; inspect
+<code>.status</code>. Missing curl, TLS/network failures, oversized or non-UTF-8 responses
+return an error result. Calls block the runtime thread. The initial POST helper
+sends curl&#39;s default form content type.</p>
+<p>The exact functions are <code>net.get(url: text)</code> and <code>net.post(url: text, body: text)</code>.
+They return success/error results. A success payload has <code>.status</code> (integer) and
+<code>.body</code> (text). A URL with a non-HTTP(S) scheme is rejected as an argument
+diagnostic.</p>
+<p>On Windows the runtime launches <code>curl.exe</code>; a PowerShell alias named <code>curl</code>
+does not substitute for that executable. You can check it with
+<code>curl.exe --version</code>. On other systems the executable name is <code>curl</code>.</p>
+<pre><code class="language-indium">import net
+response = net.get(&quot;https://example.com&quot;)
+if response is error {
+    print(&quot;Transport failed:&quot;, response.error)
+} else {
+    status = response.value.status
+    if status &gt;= 200 and status &lt; 300 {
+        print(response.value.body)
+    } else {
+        print(&quot;HTTP status:&quot;, status)
+    }
+}
+</code></pre>
+<p>Executing this block accesses the network. It is only checked, not called, by
+the documentation verifier. HTTP(S) support does not include a web server,
+websockets, custom headers, cookies/session management APIs, streaming downloads,
+file-upload helpers, automatic redirects, or a general JSON library.</p>
+<h2 id="library-time-and-game">Time and game</h2>
+<p>Use <code>import time</code> or <code>import game</code> for their namespaces.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Property/function</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>time.now()</code> / <code>time.elapsed</code></td>
+<td>Monotonic seconds since scheduler start; top-level uses initialization time</td>
+</tr>
+<tr>
+<td><code>time.dt</code></td>
+<td>Seconds since the previous rendered frame</td>
+</tr>
+<tr>
+<td><code>time.sleep(seconds)</code></td>
+<td>Alias for blocking <code>sleep</code></td>
+</tr>
+<tr>
+<td><code>game.tps</code></td>
+<td>Simulation ticks/second, default 240; set between 1 and 10000</td>
+</tr>
+<tr>
+<td><code>game.dt</code></td>
+<td>Fixed seconds per tick</td>
+</tr>
+<tr>
+<td><code>game.ticks</code></td>
+<td>Number of dispatched ticks</td>
+</tr>
+<tr>
+<td><code>game.frames</code></td>
+<td>Number of completed frame iterations; zero during the first frame</td>
+</tr>
+<tr>
+<td><code>game.max_catchup</code></td>
+<td>Maximum ticks per iteration, default 8; set between 1 and 1000</td>
+</tr>
+<tr>
+<td><code>game.dropped_ticks</code></td>
+<td>Tick intervals discarded after overload</td>
+</tr>
+<tr>
+<td><code>game.stop()</code></td>
+<td>Alias for <code>stop()</code></td>
+</tr>
+</tbody></table></div>
+<p>A tick counter advances only when tick handlers are registered. Frame handlers
+require 2D mode. See the language guide for scheduler semantics.</p>
+<p>Only <code>game.tps</code> and <code>game.max_catchup</code> are writable game properties. <code>game.tps</code>
+accepts a number and reads back as a decimal; <code>.max_catchup</code> requires an integer.
+The other counters/deltas and time properties are read-only. <code>time.now()</code> and
+<code>time.elapsed</code> are monotonic relative times, not a calendar date or timestamp.
+Their clock resets before the scheduler starts; see <a href="#scheduling">Scheduling</a>.</p>
+<h2 id="library-window--available-without-imports">Window — available without imports</h2>
+<p>Set properties during top-level initialization; drawing begins in frame
+handlers after window creation. These properties can also change at runtime:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Default / accepted values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>window.title</code></td>
+<td><code>&quot;Indium&quot;</code>, text</td>
+</tr>
+<tr>
+<td><code>window.width</code> / <code>.height</code></td>
+<td>800 / 600, integers 1..16384</td>
+</tr>
+<tr>
+<td><code>window.fps</code></td>
+<td>60; 0 means uncapped; maximum 10000</td>
+</tr>
+<tr>
+<td><code>window.vsync</code></td>
+<td><code>true</code>; actual support depends on the driver</td>
+</tr>
+<tr>
+<td><code>window.fullscreen</code></td>
+<td><code>false</code>; enabling uses borderless desktop fullscreen</td>
+</tr>
+<tr>
+<td><code>window.exclusive</code></td>
+<td><code>false</code>; select exclusive fullscreen when supported</td>
+</tr>
+<tr>
+<td><code>window.backend</code></td>
+<td>Read-only; <code>&quot;opengl&quot;</code> after initialization</td>
+</tr>
+</tbody></table></div>
+<p><code>window.toggle_fullscreen()</code> toggles <code>.fullscreen</code>; <code>window.close()</code> exits.
+Toggling fullscreen from an existing window preserves its windowed dimensions
+for restoration. Resizing a desktop
+window updates its reported dimensions. Borderless fullscreen uses the display
+size. Exclusive fullscreen selection can fail if the platform rejects it.
+There is no monitor-selection or refresh-rate/resolution-selection API yet.</p>
+<p>The renderer requests SDL&#39;s OpenGL backend explicitly; it does not silently
+fall back to a software SDL renderer. Headless Mesa can still supply a software
+OpenGL implementation. For SDL&#39;s offscreen driver, resizing recreates its window
+because that driver does not resize its EGL pbuffer.</p>
+<h2 id="library-renderer--built-in">Renderer — built in</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>renderer.clear(color)</code></td>
+<td>Clear the frame</td>
+</tr>
+<tr>
+<td><code>renderer.rect(x, y, width, height, color?)</code></td>
+<td>Filled rectangle</td>
+</tr>
+<tr>
+<td><code>renderer.outline(x, y, width, height, color?)</code></td>
+<td>One-pixel rectangle outline</td>
+</tr>
+<tr>
+<td><code>renderer.line(x1, y1, x2, y2, color?)</code></td>
+<td>One-pixel line</td>
+</tr>
+<tr>
+<td><code>renderer.circle(x, y, radius, color?)</code></td>
+<td>Filled circle</td>
+</tr>
+<tr>
+<td><code>renderer.text(text, x, y, size?, color?)</code></td>
+<td>DejaVu Sans; default size 24</td>
+</tr>
+<tr>
+<td><code>renderer.image(path, x, y)</code></td>
+<td>Image at its original size</td>
+</tr>
+<tr>
+<td><code>renderer.image(path, x, y, width, height)</code></td>
+<td>Scaled image</td>
+</tr>
+<tr>
+<td><code>renderer.save(path)</code></td>
+<td>Capture the current frame, e.g. to a <code>.png</code> file</td>
+</tr>
+</tbody></table></div>
+<p>Draw inside <code>every frame { ... } loop</code>. The runtime presents the frame after
+handlers return. Coordinates start at the top-left. Colors accept <code>#RRGGBB</code>,
+<code>#RRGGBBAA</code>, <code>[r, g, b]</code>, or <code>[r, g, b, a]</code> with integer channels 0..255.
+Names: <code>black</code>, <code>white</code>, <code>red</code>, <code>green</code>, <code>blue</code>, <code>indium</code>. The default drawing color
+is white. Color name <code>indium</code> is a temporary convenience color, not final branding.</p>
+<p>PNG, JPEG, and BMP decoding is enabled. Source images are bounded to 8192 by
+8192 with a 128 MiB decode allocation limit. Font size is 1..256; individual text
+runs are bounded. Decoded images and text rasters are cached in CPU memory.</p>
+<p>Every renderer call returns <code>none</code> on success and raises a diagnostic on a
+failure. <code>clear</code> requires a color; other optional colors default to white.
+For text, supplying a color also requires supplying the font-size argument first.
+Image calls accept exactly 3 or 5 arguments, not 4. Dimensions/radii must be
+positive numbers in 1..16384; coordinates accept numbers in -1000000..1000000
+and truncate to integer pixels. Window dimensions and FPS, in contrast, require
+actual integers. See <a href="#media">Graphics, input, and audio</a> for
+complete programs, asset handling, screenshots, caching, and input examples.</p>
+<h2 id="library-keyboard-and-mouse--built-in">Keyboard and mouse — built in</h2>
+<ul>
+<li><code>input.key_down(&quot;space&quot;)</code>: currently held.</li>
+<li><code>input.key_pressed(&quot;space&quot;)</code>: newly pressed since the last tick/frame.</li>
+<li><code>input.mouse_down(&quot;left&quot;)</code>, <code>input.mouse_pressed(&quot;left&quot;)</code>.</li>
+<li><code>input.mouse_x</code>, <code>input.mouse_y</code>: latest window coordinates.</li>
+</ul>
+<p>Key names use SDL key names, e.g. <code>left</code>, <code>right</code>, <code>escape</code>, <code>space</code>, <code>F11</code>.
+Mouse buttons: <code>left</code>, <code>right</code>, <code>middle</code>. Unknown names raise diagnostics.
+Key repeat events do not create repeated press edges. Tick and frame handlers
+have independent press-edge buffers so a slow render frame does not consume
+an edge before simulation sees it. The edge lasts for one tick and one frame;
+multiple handlers in that same phase can see it. Held keys clear on focus loss.</p>
+<h2 id="library-audio--built-in">Audio — built in</h2>
+<pre><code class="language-indium">sound = audio(&quot;assets/tone.ogg&quot;)
+// Optional positional arguments: volume, then looping.
+music = audio.play(&quot;assets/tone.ogg&quot;, 0.5, true)
+audio.pause(music)
+audio.resume(music)
+audio.volume(music, 0.25)
+audio.stop(music)
+print(audio.playing(music))
+</code></pre>
+<p>Actual syntax is positional; named arguments in the comment above describe the
+defaults, not supported call syntax. <code>audio</code> and <code>audio.play</code> return a positive
+integer voice handle. Volume is 0..1. <code>playing</code> is false for paused, completed,
+or stopped handles. Other control functions report whether a live handle was
+found. Up to 128 simultaneous voices are mixed and clipped into stereo output.</p>
+<p>Implemented formats: OGG with Vorbis, and PCM WAV; mono/stereo input. Mixing
+resamples source rates to the opened device&#39;s rate. MP3, Opus-in-OGG, streaming,
+and multichannel audio are not implemented. Files are decoded once and cached
+in memory, with a 256 MiB limit per decoded sound. Short effects and moderate
+music tracks work; this is not yet a streaming music engine.</p>
+<p>Audio initialization is lazy, so a terminal program does not open a sound device
+unless it calls the audio API. Device/format failures are source diagnostics.
+Returning from a program stops its audio; use a scheduler or sleep to keep a
+terminal audio program alive long enough for playback.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="media" aria-label="Graphics, input, and audio"><h1 id="media-graphics-input-and-audio">Graphics, input, and audio</h1>
+<p>The default Indium build includes OpenGL-backed 2D rendering, keyboard/mouse
+input, and OGG/WAV audio. <code>window</code>, <code>renderer</code>, <code>input</code>, and <code>audio</code> are available
+without imports. A terminal-only build cannot use the media backend.</p>
+<h2 id="media-your-first-window">Your first window</h2>
+<p>Save this as <code>drawing.in</code>:</p>
+<pre><code class="language-indium">mode = 2d
+window.title = &quot;My first Indium window&quot;
+window.width = 640
+window.height = 400
+window.vsync = false
+
+every frame {
+    renderer.clear(&quot;#141724&quot;)
+    renderer.rect(40, 70, 160, 90, &quot;indium&quot;)
+    renderer.circle(360, 120, 45, &quot;#58d6a7&quot;)
+    renderer.line(40, 230, 500, 230, &quot;white&quot;)
+    renderer.text(&quot;Hello, Indium!&quot;, 40, 280, 28, &quot;white&quot;)
+} loop
+</code></pre>
+<p>Run it with <code>indium run drawing.in</code>. The window stays open until closed. The
+three-frame limit shown in the documentation test marker is only a verifier
+setting; it is not part of the program&#39;s runtime behavior.</p>
+<p>Top-level code configures the window. It opens after initialization finishes.
+Draw inside <code>every frame</code>, after that point. The runtime presents the completed
+frame automatically; there is no user-callable <code>present</code> function.</p>
+<p>Use one <code>renderer.clear</code> at the beginning of each frame. Drawing order matters:
+later shapes and images are drawn over earlier ones. There is no built-in scene
+graph, sprite object, camera transform, layer system, or collision engine.</p>
+<h2 id="media-coordinates-shapes-and-colors">Coordinates, shapes, and colors</h2>
+<p>The origin <code>(0, 0)</code> is the top-left. X increases to the right and Y downwards.
+Rectangles/images use a top-left corner plus width and height. A circle&#39;s X/Y
+position is its center. Lines use two endpoint positions.</p>
+<p>Coordinates accept integers or decimals and are converted to integer pixels
+by truncation toward zero. Allowed coordinates are -1000000 through 1000000.
+Widths, heights, and circle radii accept numeric values in 1..16384, then are
+truncated. Keep positive sizes even when a shape is partly offscreen.</p>
+<p>Colors accept:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Example</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RGB hex text</td>
+<td><code>&quot;#7163ff&quot;</code></td>
+<td>Opaque red/green/blue channels</td>
+</tr>
+<tr>
+<td>RGBA hex text</td>
+<td><code>&quot;#7163ff80&quot;</code></td>
+<td>RGB plus alpha at the end</td>
+</tr>
+<tr>
+<td>RGB list</td>
+<td><code>[113, 99, 255]</code></td>
+<td>Three integer channels, each 0..255</td>
+</tr>
+<tr>
+<td>RGBA list</td>
+<td><code>[113, 99, 255, 128]</code></td>
+<td>Three channels plus alpha, each 0..255</td>
+</tr>
+<tr>
+<td>Named color</td>
+<td><code>&quot;white&quot;</code></td>
+<td><code>black</code>, <code>white</code>, <code>red</code>, <code>green</code>, <code>blue</code>, or <code>indium</code></td>
+</tr>
+</tbody></table></div>
+<p>Alpha 0 is transparent and 255 is opaque. Omitted optional drawing colors are
+white. Named colors are lowercase. <code>indium</code> currently means <code>#7163ff</code>; it is a
+temporary convenience color rather than a finalized brand palette.</p>
+<p><code>renderer.rect</code> is filled, <code>renderer.outline</code> is a one-pixel rectangle border,
+<code>renderer.line</code> is one pixel wide, and <code>renderer.circle</code> draws a filled circle.
+There are no rotation, gradients, stroke-width, polygon, or shader APIs yet.</p>
+<h2 id="media-text-and-images">Text and images</h2>
+<p>Fragments to place inside a frame handler:</p>
+<pre><code class="language-indium">renderer.text(&quot;Default size is 24&quot;, 20, 20)
+renderer.text(&quot;Larger text&quot;, 20, 60, 36, &quot;#ffffff&quot;)
+renderer.image(&quot;assets/player.png&quot;, 20, 130)
+renderer.image(&quot;assets/player.png&quot;, 100, 130, 64, 64)
+</code></pre>
+<p>Text uses the embedded DejaVu Sans font. It supports Unicode text within that
+font&#39;s glyph coverage; no custom-font loader is exposed. Font size accepts a
+number from 1 through 256. To set a text color, supply the size first, followed
+by the color. Text runs are limited to 16384 UTF-8 bytes and a raster size of
+16384 by 4096 pixels. An empty text run draws nothing.</p>
+<p>Images support PNG, JPEG, and BMP, including source alpha where the format
+supports it. The three-argument image call uses the original dimensions. The
+five-argument form scales to the requested width/height. There is no
+four-argument form, source-rectangle cropping, image tint parameter, or rotation.
+Decoded source images are limited to 8192 by 8192 and a 128 MiB decode allocation.</p>
+<p>All asset paths are relative to the <code>.in</code> file containing the call (or the
+function&#39;s defining file). Use the supplied <code>examples/assets/checker.png</code> when
+trying the existing <code>examples/2d.in</code>; the <code>player.png</code> fragment above assumes
+you supply that file yourself.</p>
+<p>Decoded images are cached by canonical path. Replacing the file during a run
+does not automatically reload the cached image. Text rasters are cached by text
+and size, with a small cache that clears after 128 entries. Avoid repeatedly
+drawing huge images or constantly generating large unique text strings.</p>
+<h2 id="media-screenshots">Screenshots</h2>
+<p>Call <code>renderer.save(&quot;capture.png&quot;)</code> after drawing everything you want to capture,
+inside the frame handler. It reads the current framebuffer and writes an image
+relative to the calling source file. The parent directory must already exist.
+Use a <code>.png</code> suffix for PNG output. A failed save is a runtime diagnostic, not a
+success/error result.</p>
+<p>For a one-time capture, use a persistent flag declared before the handler:</p>
+<pre><code class="language-indium">// Top-level: saved = false
+if not saved {
+    renderer.save(&quot;capture.png&quot;)
+    saved = true
+}
+</code></pre>
+<h2 id="media-held-keys-versus-new-presses">Held keys versus new presses</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Call</th>
+<th>When it is true</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>input.key_down(&quot;right&quot;)</code></td>
+<td>The key is currently held</td>
+<td>Continuous movement</td>
+</tr>
+<tr>
+<td><code>input.key_pressed(&quot;space&quot;)</code></td>
+<td>A new press occurred since the last matching phase</td>
+<td>Jump, menu action, sound</td>
+</tr>
+<tr>
+<td><code>input.mouse_down(&quot;left&quot;)</code></td>
+<td>The mouse button is held</td>
+<td>Dragging, continuous drawing</td>
+</tr>
+<tr>
+<td><code>input.mouse_pressed(&quot;left&quot;)</code></td>
+<td>A new button press occurred</td>
+<td>Click action</td>
+</tr>
+</tbody></table></div>
+<p>Input requires an initialized 2D window. Polling input during top-level setup
+fails because the window has not opened. Key names use SDL&#39;s key names, such as
+<code>left</code>, <code>right</code>, <code>up</code>, <code>down</code>, <code>space</code>, <code>escape</code>, and <code>F11</code>. Unknown names fail.
+Mouse button names are exactly <code>left</code>, <code>middle</code>, and <code>right</code>.</p>
+<p><code>input.mouse_x</code> and <code>input.mouse_y</code> give the most recently received window mouse
+coordinates. They start at zero. There is no mouse wheel, text-entry event,
+gamepad, raw relative mouse, or configurable input-binding API yet.</p>
+<p>Key-repeat events do not create extra new presses. Tick and frame handlers have
+separate press-edge buffers, so input seen by rendering is not consumed before
+simulation sees it. Multiple handlers within one phase can see the same edge.
+Focus loss clears held/pressed states.</p>
+<h2 id="media-movement-with-a-fixed-tick">Movement with a fixed tick</h2>
+<pre><code class="language-indium">mode = 2d
+import game
+import math
+window.title = &quot;Move with arrows&quot;
+window.width = 640
+window.height = 400
+window.fps = 60
+window.vsync = false
+game.tps = 240
+x = 100.0
+y = 100.0
+speed = 180.0
+
+every tick {
+    if input.key_down(&quot;left&quot;) { x -= speed * game.dt }
+    if input.key_down(&quot;right&quot;) { x += speed * game.dt }
+    if input.key_down(&quot;up&quot;) { y -= speed * game.dt }
+    if input.key_down(&quot;down&quot;) { y += speed * game.dt }
+    x = math.clamp(x, 0, window.width - 30)
+    y = math.clamp(y, 0, window.height - 30)
+    if input.key_pressed(&quot;F11&quot;) { window.toggle_fullscreen() }
+    if input.key_pressed(&quot;escape&quot;) { stop() }
+} loop
+
+every frame {
+    renderer.clear(&quot;#141724&quot;)
+    renderer.rect(x, y, 30, 30, &quot;indium&quot;)
+    renderer.text(&quot;Arrows move; F11 fullscreen; Escape quits&quot;, 12, 12, 18)
+} loop
+</code></pre>
+<p>The speed is pixels per second. <code>game.dt</code> turns it into pixels per simulation
+tick. X and Y start as decimals because movement produces decimal values. The
+frame handler only draws the latest state. See <a href="#scheduling">Scheduling</a> for
+the difference between <code>game.dt</code> and the render delta <code>time.dt</code>.</p>
+<h2 id="media-window-settings-and-fullscreen">Window settings and fullscreen</h2>
+<p><code>window.title</code>, <code>.width</code>, <code>.height</code>, <code>.fps</code>, <code>.vsync</code>, <code>.fullscreen</code>, and
+<code>.exclusive</code> can be configured before opening and changed while running.
+<code>window.backend</code> is read-only. It is <code>&quot;not initialized&quot;</code> before a normal media
+window opens and <code>&quot;opengl&quot;</code> afterward; terminal-only builds report <code>&quot;unavailable&quot;</code>.</p>
+<p>To start in borderless fullscreen, set <code>window.fullscreen = true</code> at top level.
+The default <code>window.exclusive = false</code> uses desktop fullscreen. For exclusive
+fullscreen, set <code>.exclusive = true</code> as well; the platform can reject it. There
+is no monitor selector, display-mode selector, or refresh-rate selector yet.</p>
+<p><code>window.toggle_fullscreen()</code> flips the fullscreen setting. Toggling from an
+existing window preserves the prior windowed size for restoration. Native resize events update the reported
+window dimensions. Borderless fullscreen uses the display size. Width/height
+configuration is mainly meaningful in windowed mode.</p>
+<p><code>window.fps</code> is a software render cap. VSync may cap it further, and a slow
+machine may achieve less. For a high requested FPS or uncapped rendering,
+disable VSync explicitly if appropriate. Even then, nothing guarantees the
+requested rate. The backend explicitly requests OpenGL; it does not switch to
+SDL&#39;s software renderer when OpenGL fails.</p>
+<h2 id="media-playing-sound">Playing sound</h2>
+<p>The shortest call is <code>audio(&quot;sound.ogg&quot;)</code>. The equivalent explicit call is
+<code>audio.play(&quot;sound.ogg&quot;)</code>. Both return a positive integer handle for one voice.</p>
+<pre><code class="language-indium">// Assumes assets/music.ogg exists beside this program&#39;s assets folder.
+music = audio.play(&quot;assets/music.ogg&quot;, 0.5, true)
+audio.pause(music)
+audio.resume(music)
+audio.volume(music, 0.25)
+print(audio.playing(music))
+audio.stop(music)
+</code></pre>
+<p>The optional arguments are volume (default 1.0, range 0..1) and looping (default
+false). They are positional. Looping requires the third argument, so include a
+volume value even if you want the default volume.</p>
+<p>Pause/resume/stop/volume return a boolean indicating whether a live handle was
+found. <code>audio.playing(handle)</code> returns false for paused, finished, or stopped
+voices. <code>audio.volume</code> sets the volume; it is not a getter. Reusing a file starts
+a separate voice, so effects can overlap. At most 128 voices coexist, including
+paused voices. The mixer clamps combined output into the stereo sample range.</p>
+<p>Audio supports OGG with Vorbis and PCM WAV, with mono or stereo source audio.
+The runtime resamples to the opened device&#39;s rate and mixes stereo output.</p>
+<p>Files are decoded once and cached by canonical path. Each decoded sound is
+limited to 256 MiB. Sound devices open lazily on
+the first playback call, including in terminal/background programs. File,
+codec, or device failures are runtime diagnostics rather than result values.</p>
+<h2 id="media-keep-a-terminal-sound-alive">Keep a terminal sound alive</h2>
+<p>When a terminal script ends, its audio stops too. The supplied <code>examples/audio.in</code>
+uses brief sleeps to demonstrate playback before exiting. Another approach is
+a timer that keeps the program alive until the sound finishes. Do not block a
+2D handler with a sleep to wait for music; let the scheduler continue.</p>
+<p>There is no <code>audio.stop()</code> with no arguments to stop all voices. Call
+<code>audio.stop(handle)</code> for a particular sound. The global <code>stop()</code> function exits
+the entire program.</p>
+<h2 id="media-what-has-been-verified">What has been verified</h2>
+<p>OpenGL rendering and synthetic input were tested with an offscreen Mesa driver;
+audio decoding/mixing and playback state were tested with a dummy device. The
+user has confirmed the Windows terminal build and hello program work. Physical
+Windows graphics, real speakers, monitor-specific VSync, and exclusive
+fullscreen still need testing. See the <a href="#validation">validation record</a>.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="scheduling" aria-label="Ticks, frames, and timers"><h1 id="scheduling-ticks-frames-and-timers">Ticks, frames, and timers</h1>
+<p>Indium can execute a normal terminal script, keep a timer-driven program alive,
+or run a 2D window with independent simulation and rendering rates. All Indium
+handlers execute on the same runtime thread.</p>
+<h2 id="scheduling-program-lifecycle">Program lifecycle</h2>
+<ol>
+<li>The loader reads, parses, and checks the entry file and local import graph.</li>
+<li>Top-level statements run in order. They initialize variables, import modules,
+configure the window, and register recurring handlers.</li>
+<li>If <code>stop()</code> was called during initialization, execution ends immediately.</li>
+<li>Otherwise, <code>2d</code> mode opens the window; terminal/background mode opens none.</li>
+<li>The scheduler runs registered ticks/timers and, for 2D, graphical frames.</li>
+</ol>
+<p>A terminal/background file without handlers finishes after its statements run.
+A 2D program keeps polling its window even if no handlers were registered.
+An endless top-level loop prevents initialization from finishing, so a 2D window
+will never open. Put ongoing work in recurring handlers instead.</p>
+<p>Functions are hoisted within their scope, but variables initialize in source
+order. Declare a handler&#39;s captured variables before declaring that handler.
+Handlers must be at module level, outside functions, loops, conditions, or other
+handlers. Imported modules may also declare module-level handlers.</p>
+<h2 id="scheduling-three-handler-forms">Three handler forms</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Trigger</th>
+<th>Typical work</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>every tick { ... } loop</code></td>
+<td>Fixed simulation step</td>
+<td>Movement, physics, game rules</td>
+</tr>
+<tr>
+<td><code>every frame { ... } loop</code></td>
+<td>Render deadline, in 2D mode</td>
+<td>Clear and draw the next frame</td>
+</tr>
+<tr>
+<td><code>every 500 milliseconds { ... } loop</code></td>
+<td>Recurring real-time interval</td>
+<td>Status messages, periodic updates</td>
+</tr>
+</tbody></table></div>
+<p>The trailing <code>loop</code> is required in every form. <code>second</code>/<code>seconds</code> and
+<code>millisecond</code>/<code>milliseconds</code> are accepted. There is no <code>every minute</code> form; write
+<code>every 60 seconds</code> instead.</p>
+<pre><code class="language-indium">count = 0
+
+every 10 milliseconds {
+    count += 1
+    print(&quot;Timer:&quot;, count)
+    if count == 3 {
+        stop()
+    }
+} loop
+</code></pre>
+<p>This prints three timer messages, then exits. The interval expression is
+evaluated once when the handler is registered. Changing the variable used to
+calculate it later does not change the registered interval. Supported intervals
+are 0.000001 seconds through 365 days; actual precision depends on the runtime
+and operating system. A one-microsecond request is not a real-time guarantee.</p>
+<p>Each invocation gets a fresh block scope. Variables created only inside that
+block do not persist to the next invocation. Assign to an existing outer
+variable, such as <code>count</code>, to retain state.</p>
+<p><code>break</code> and <code>continue</code> apply to an actual <code>for</code>, <code>while</code>, or <code>loop</code> inside the
+handler. They cannot terminate the recurring registration itself. Use <code>stop()</code>
+to finish the program.</p>
+<h2 id="scheduling-simulation-tps-and-fixed-delta-time">Simulation TPS and fixed delta time</h2>
+<pre><code class="language-indium">import game
+game.tps = 100
+position = 0.0
+
+every tick {
+    position += 50 * game.dt
+    if game.ticks == 3 {
+        print(&quot;Three ticks completed.&quot;)
+        stop()
+    }
+} loop
+</code></pre>
+<p><code>game.tps</code> means ticks per second. Its default is 240, and it accepts numeric
+values from 1 through 10000. <code>game.dt</code> is the fixed duration of the current tick
+in seconds: <code>1 / game.tps</code>. Multiplying a speed in pixels/second by this delta
+makes a movement update express a distance per tick.</p>
+<p>The scheduler increments <code>game.ticks</code> before running that tick&#39;s handlers. Ticks
+are only dispatched when at least one tick handler exists; simply importing
+<code>game</code> does not start a simulation counter.</p>
+<h2 id="scheduling-rendering-fps-and-frame-delta-time">Rendering FPS and frame delta time</h2>
+<p><code>window.fps</code> requests a maximum render frequency: default 60, or 0 for uncapped.
+<code>time.dt</code> is the actual monotonic time between frame starts, not <code>1 / fps</code>.
+<code>window.vsync</code> can further restrict presentation to the monitor/driver cadence.</p>
+<p>Rendering FPS does not determine TPS. A 240-TPS simulation can request 60, 144,
+or another rendering FPS. These are requested schedules, not performance
+guarantees. There is no automatic interpolation between previous/current tick
+states in this release; a frame draws whatever state your handlers have produced.</p>
+<p><code>game.frames</code> counts completed frame iterations. It is zero while the first
+frame&#39;s handlers run. <code>time.dt</code> starts at 0 before scheduling and can be very
+small on the first frame. It is a render value, so do not use it as a timer or
+fixed-tick delta in a terminal-only program.</p>
+<p><code>time.now()</code> and <code>time.elapsed</code> both report monotonic elapsed seconds. During
+top-level initialization they measure from interpreter creation. The start
+instant is reset just before the scheduler loop; a timestamp taken during
+initialization is therefore not a persistent wall-clock timestamp. No calendar
+date, time zone, or system-clock API is exposed yet.</p>
+<h2 id="scheduling-what-happens-during-one-scheduler-pass">What happens during one scheduler pass</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Order</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Poll window events in 2D mode</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Accumulate elapsed time and dispatch due simulation ticks</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Dispatch due timers</td>
+</tr>
+<tr>
+<td>4</td>
+<td>If a frame is due, run frame handlers and present it</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Sleep until the nearest relevant deadline, subject to a small polling cap</td>
+</tr>
+</tbody></table></div>
+<p>Multiple handlers in the same phase run in registration order. All handlers
+for one frame draw onto the same backbuffer, which is presented after they
+finish. If multiple handlers clear it, later clears erase earlier drawing.</p>
+<p>Keyboard/mouse press edges have separate tick and frame buffers. A press is
+visible to all handlers in the next tick and all handlers in the next frame;
+it is then cleared for that phase. Several catch-up ticks do not each see a new
+press. See <a href="#media">Graphics, input, and audio</a>.</p>
+<h2 id="scheduling-catch-up-overload-and-missed-timers">Catch-up, overload, and missed timers</h2>
+<p>If the runtime falls behind, the simulation can process several ticks in one
+scheduler pass. <code>game.max_catchup</code> defaults to 8, accepts integer values from 1
+through 1000, and bounds that burst of work. Excess due tick intervals are
+discarded and counted in <code>game.dropped_ticks</code>.</p>
+<p>An overdue timer fires once, then advances its next deadline to the next point
+on its original cadence. It skips missed invocations rather than replaying
+all of them in a burst.</p>
+<p>Increasing the catch-up limit can help preserve tick counts under a blocking
+renderer, but does not make slow handler code faster. Very large bursts can
+also delay rendering and input processing. Measure the program and reduce
+blocking or expensive work before relying on extreme limits.</p>
+<h2 id="scheduling-blocking-and-stopping">Blocking and stopping</h2>
+<p><code>sleep</code>, terminal input, filesystem work, HTTP requests, and drawing execute
+synchronously on the runtime thread. A long call delays ticks, timers, and
+frames. <code>sleep</code> is useful in a simple terminal audio demo; using it to pace a
+2D handler blocks the entire runtime.</p>
+<p>The audio callback mixes playback on its internal device thread after a sound
+has been started. This does not make Indium handler code multithreaded.</p>
+<p><code>stop()</code>, <code>game.stop()</code>, and <code>window.close()</code> end the whole program normally.
+Closing the native window also ends it. A tick/frame/timer handler that calls
+one of these should not rely on later statements running: the interpreter
+checks the stop state between statements.</p>
+<p>For short graphics tests, use <code>indium run drawing.in --frames 3</code>. To bound
+interpreter work, use <code>--max-steps</code>; neither option is a general wall-clock
+timeout. See the <a href="#cli">CLI reference</a>.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="cli" aria-label="Command-line reference"><h1 id="cli-command-line-reference">Command-line reference</h1>
+<p>The executable is <code>indium</code> (<code>indium.exe</code> on Windows). Source files must have the
+lowercase <code>.in</code> extension. Quote paths containing spaces. Shell commands belong
+in your terminal, not inside a <code>.in</code> file.</p>
+<h2 id="cli-commands">Commands</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>indium run FILE.in</code></td>
+<td>Check the source/import graph, then execute the program</td>
+</tr>
+<tr>
+<td><code>indium check FILE.in</code></td>
+<td>Check source and local imports without executing the program</td>
+</tr>
+<tr>
+<td><code>indium tokens FILE.in</code></td>
+<td>Print this file&#39;s lexical tokens with line/column locations</td>
+</tr>
+<tr>
+<td><code>indium --version</code></td>
+<td>Show version and whether the build contains media support</td>
+</tr>
+<tr>
+<td><code>indium --help</code></td>
+<td>Show a compact usage summary</td>
+</tr>
+<tr>
+<td><code>indium 49</code></td>
+<td>Small element-name Easter egg</td>
+</tr>
+</tbody></table></div>
+<p>Running <code>indium</code> without arguments, <code>indium help</code>, or <code>indium -h</code> also shows
+help. <code>indium -V</code> is a version alias.</p>
+<p><code>tokens</code> is useful when inspecting how identifiers, text, punctuation, operators,
+and newlines are read. It only lexes the requested file; it does not parse or
+execute it, and does not traverse its imports. Its debug token spelling is an
+implementation detail rather than a stable machine-readable format.</p>
+<h2 id="cli-run-flags">Run flags</h2>
+<pre><code class="language-text">indium run FILE.in [--max-steps N] [--frames N] [-- ARGS...]
+</code></pre>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--max-steps N</code></td>
+<td>Stop with a diagnostic once the interpreter exceeds N execution steps</td>
+</tr>
+<tr>
+<td><code>--frames N</code></td>
+<td>End the scheduler after N graphical frame iterations</td>
+</tr>
+<tr>
+<td><code>--</code></td>
+<td>Treat every following argument as a text argument for the Indium program</td>
+</tr>
+</tbody></table></div>
+<p><code>N</code> must be a nonnegative integer. Both limits default to absent. A step is an
+internal statement/expression/loop operation, not a CPU instruction or a second
+of time. Execution-step limits do not interrupt a blocking input, sleep, network
+call, or native drawing call while that call is in progress.</p>
+<p>Frame limits apply to the scheduler, after top-level initialization. They are
+not a general terminal-program timeout. A terminal program with only timers or
+ticks has no frames to count. <code>--frames 0</code> performs initialization but dispatches
+no scheduler iterations; it does not skip the file&#39;s top-level statements.</p>
+<pre><code class="language-powershell">indium run simulation.in --max-steps 100000
+indium run drawing.in --frames 120
+indium run simulation.in --max-steps 100000 -- first second
+</code></pre>
+<p><code>check</code> and <code>tokens</code> accept only their source filename, without these run flags.
+Unknown commands/options and missing/invalid arguments return an error. There
+is no stdin-source mode, inline <code>-e</code> evaluator, interactive REPL, project runner,
+formatter, or package-manager command implemented in this release.</p>
+<h2 id="cli-program-arguments">Program arguments</h2>
+<pre><code class="language-indium">arguments = args()
+if len(arguments) == 0 {
+    print(&quot;No arguments were supplied.&quot;)
+} else {
+    print(&quot;First argument:&quot;, arguments[0])
+}
+</code></pre>
+<p>Run a saved copy with:</p>
+<pre><code class="language-powershell">indium run program.in -- &quot;a name&quot; 49 --custom-option
+</code></pre>
+<p>The program receives three text values: <code>&quot;a name&quot;</code>, <code>&quot;49&quot;</code>, and
+<code>&quot;--custom-option&quot;</code>. It receives neither the executable name nor source filename.
+Convert numeric text explicitly and validate input before relying on it.</p>
+<h2 id="cli-results-and-exit-status">Results and exit status</h2>
+<p>A successful CLI operation exits with status 0. Argument errors, source-check
+errors, and runtime diagnostics exit with status 1 and print the error to
+standard error. The <code>stop()</code> function ends the program normally; it does not
+take an exit-code argument.</p>
+<p>A filesystem or HTTP <code>error(...)</code> result is ordinary program data. Receiving
+one does not by itself make the CLI exit unsuccessfully. Your code decides
+whether to print a message, return a result, stop, or raise an assertion.</p>
+<p><code>--max-steps</code> is a diagnostic failure when exceeded. Reaching a frame limit is
+a normal end of execution. Closing a native window also ends normally.</p>
+<h2 id="cli-building-indium">Building Indium</h2>
+<p><code>cargo build --release --locked</code> builds the <strong>Rust implementation of Indium</strong>.
+Its output is the interpreter executable, not a native build of an individual
+Indium program. Once the runtime is built, ordinary <code>indium run</code> calls do not
+need Cargo.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="recipes" aria-label="Recipes"><h1 id="recipes-recipes">Recipes</h1>
+<p>These patterns use the current language and built-in library. Code blocks
+marked <code>run</code> are complete examples with no interactive input or external
+network requests. File-writing examples say what they create.</p>
+<h2 id="recipes-count-occurrences-with-a-map">Count occurrences with a map</h2>
+<pre><code class="language-indium">words = split(lower(&quot;red blue red green blue red&quot;), &quot; &quot;)
+counts = {}
+for word in words {
+    if contains(counts, word) {
+        counts[word] += 1
+    } else {
+        counts[word] = 1
+    }
+}
+for word in counts {
+    print(word, counts[word])
+}
+</code></pre>
+<p>The output order is <code>blue 2</code>, <code>green 1</code>, <code>red 3</code>, because maps iterate sorted
+keys. Reading a missing key would fail, so the code checks <code>contains</code> first.
+This example splits on a literal space; real text with punctuation or multiple
+whitespace kinds needs your own normalization/tokenization rules.</p>
+<h2 id="recipes-filter-and-reverse-a-list">Filter and reverse a list</h2>
+<pre><code class="language-indium">values = [5, 12, 3, 18, 9]
+large = []
+for value in values {
+    if value &gt;= 10 { push(large, value) }
+}
+
+reversed = []
+for offset in 0..len(large) {
+    push(reversed, large[-1 - offset])
+}
+print(large)    // [12, 18]
+print(reversed) // [18, 12]
+</code></pre>
+<p>This creates new outer lists. There is no built-in filter/reverse API, slicing,
+or list comprehension yet. Iterating a list uses a snapshot of its elements, so
+adding items to the original does not extend an already-running <code>for</code> loop.</p>
+<h2 id="recipes-sort-a-small-numeric-list">Sort a small numeric list</h2>
+<pre><code class="language-indium">fn sorted_copy(values: list) -&gt; list {
+    result = values + []
+    count = len(result)
+    for pass in 0..count {
+        for index in 0..(count - 1) {
+            if result[index] &gt; result[index + 1] {
+                previous = result[index]
+                result[index] = result[index + 1]
+                result[index + 1] = previous
+            }
+        }
+    }
+    return result
+}
+
+original = [9, 2, 7, 1]
+print(sorted_copy(original)) // [1, 2, 7, 9]
+print(original)              // [9, 2, 7, 1]
+</code></pre>
+<p>This simple bubble-sort example is for small lists of mutually comparable
+numbers. It is quadratic work, not a fast standard-library sort. <code>values + []</code>
+makes a shallow copy so swapping outer elements does not modify the original.</p>
+<h2 id="recipes-keep-state-in-a-returned-function">Keep state in a returned function</h2>
+<pre><code class="language-indium">fn make_counter(start: integer) -&gt; function {
+    value = start
+    fn increment() -&gt; integer {
+        value += 1
+        return value
+    }
+    return increment
+}
+
+next_score = make_counter(48)
+print(next_score(), next_score()) // 49 50
+</code></pre>
+<p>The inner function keeps its captured <code>value</code> alive. Separate calls to
+<code>make_counter</code> create independent environments. <code>examples/closures.in</code> shows
+the same idea with two counters. Reference cycles are not reclaimed by a
+tracing collector yet, so avoid manufacturing many cyclic long-lived graphs.</p>
+<h2 id="recipes-return-a-recoverable-error">Return a recoverable error</h2>
+<pre><code class="language-indium">fn positive(value: integer) {
+    if value &lt;= 0 { return error(&quot;must be positive&quot;) }
+    return success(value)
+}
+
+for number in [-2, 49] {
+    checked = positive(number)
+    if checked is success {
+        print(&quot;Accepted:&quot;, checked.value)
+    } else {
+        print(&quot;Rejected:&quot;, checked.error)
+    }
+}
+</code></pre>
+<p>Results let your caller handle a failed operation without a runtime diagnostic.
+<code>error(&quot;message&quot;)</code> constructs a result; it does not throw an exception.
+Conversion, bounds, and most media errors are still diagnostics, so returning
+a result from your own function does not automatically catch those failures.</p>
+<h2 id="recipes-read-and-save-a-text-note">Read and save a text note</h2>
+<p>This example creates a <code>notes</code> directory beside its <code>.in</code> file and appends to
+<code>notes/log.txt</code> when executed. The documentation verifier only checks it.</p>
+<pre><code class="language-indium">import files
+created = files.mkdir(&quot;notes&quot;)
+if created is error {
+    print(&quot;Could not create notes folder:&quot;, created.error)
+    stop()
+}
+
+saved = files.append(&quot;notes/log.txt&quot;, &quot;Another Indium run.\n&quot;)
+if saved is error {
+    print(&quot;Could not append:&quot;, saved.error)
+    stop()
+}
+
+loaded = files.read(&quot;notes/log.txt&quot;)
+if loaded is success {
+    print(loaded.value)
+} else {
+    print(&quot;Could not read:&quot;, loaded.error)
+}
+</code></pre>
+<p>Use <code>files.write</code> to replace the complete contents instead of appending. Read
+and inspect the operation&#39;s result even when <code>files.exists</code> returned true;
+existence is not a promise that access will succeed.</p>
+<h2 id="recipes-run-a-repeated-task-a-fixed-number-of-times">Run a repeated task a fixed number of times</h2>
+<pre><code class="language-indium">remaining = 3
+every 10 milliseconds {
+    print(&quot;Remaining:&quot;, remaining)
+    remaining -= 1
+    if remaining == 0 { stop() }
+} loop
+</code></pre>
+<p>Declare <code>remaining</code> outside the handler so each invocation updates persistent
+state. <code>stop()</code> exits the entire program. To keep other handlers running after
+one task is finished, keep a boolean flag and have that handler do nothing
+when the flag is false; there is no unregister API yet.</p>
+<h2 id="recipes-validate-interactive-numeric-input">Validate interactive numeric input</h2>
+<p>See <code>examples/guessing-game.in</code>. Its <code>parse_guess</code> function:</p>
+<ol>
+<li>Trims the input text.</li>
+<li>Rejects empty text or more than three characters.</li>
+<li>Checks every character against <code>&quot;0123456789&quot;</code>.</li>
+<li>Converts to integer only after those checks.</li>
+<li>Rejects values outside 1..100 and returns a success/error result.</li>
+</ol>
+<p>This avoids trying to recover from <code>integer(&quot;not a number&quot;)</code>, which raises a
+diagnostic rather than returning a result. The three-character bound also keeps
+the conversion far below the 64-bit integer limit. The game expects interactive
+input; interrupt it with Ctrl+C if you want to leave before the game ends.</p>
+<h2 id="recipes-work-with-command-line-arguments">Work with command-line arguments</h2>
+<p>Run the supplied argument demo from the project&#39;s main folder:</p>
+<pre><code class="language-powershell">indium run examples\arguments.in -- hello &quot;two words&quot; 49
+</code></pre>
+<p><code>args()</code> returns text values. It does not automatically parse numbers or flags.
+Your own program can inspect <code>len(args())</code>, compare text flags, and validate
+values before conversion. See the <a href="#cli">CLI reference</a>.</p>
+<h2 id="recipes-build-a-small-game-loop">Build a small game loop</h2>
+<p>Start with the complete movement example in
+<a href="#media">Graphics, input, and audio</a>. Put simulation in ticks,
+draw in frames, and let the runtime present the frame. The shipped <code>2d.in</code>
+adds bouncing at the window bounds, image drawing, audio, and fullscreen.</p>
+<p>To add a sound on a key press, put this fragment in a tick or frame handler
+after the window opens, and supply the referenced OGG file:</p>
+<pre><code class="language-indium">if input.key_pressed(&quot;space&quot;) {
+    audio(&quot;assets/jump.ogg&quot;, 0.5)
+}
+</code></pre>
+<p>Use <code>key_pressed</code> for one effect per new press. <code>key_down</code> would start another
+voice on every update while the key is held, quickly reaching the voice limit.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="troubleshooting" aria-label="Troubleshooting"><h1 id="troubleshooting-troubleshooting">Troubleshooting</h1>
+<p>Start with the <strong>first complete error</strong>, including its filename and line number.
+An installation error happens before a program runs; a language diagnostic
+refers to your <code>.in</code> source; an error result is data returned to your program.</p>
+<h2 id="troubleshooting-the-terminal-cannot-find-indium">The terminal cannot find indium</h2>
+<p>If the message says <code>indium</code> is not recognized, the terminal cannot find the
+executable through its PATH. This does not indicate a syntax problem in your
+program. Run the Windows installer, close all terminal windows, and open a new
+terminal. Existing terminal host processes may retain their old environment.
+If necessary, sign out of Windows and sign back in.</p>
+<p>Verify with <code>indium --version</code> before trying a source file. For a direct check
+of a source build, run this from the <strong>main project folder</strong> containing Cargo.toml:</p>
+<pre><code class="language-powershell">.\target\release\indium.exe --version
+</code></pre>
+<p>That relative path is wrong from <code>C:\Users\v</code> or from inside <code>examples</code>. If there
+is no <code>target\release\indium.exe</code> in the project, the Windows build has not
+completed. Installing Rust alone does not build or install Indium.</p>
+<h2 id="troubleshooting-the-source-file-cannot-be-found">The source file cannot be found</h2>
+<p>Your terminal&#39;s current folder determines the path in <code>indium run ...</code>. From
+the project root, use <code>examples\hello.in</code>; from inside <code>examples</code>, use <code>hello.in</code>.
+Quote paths containing spaces. Check that an editor did not add <code>.txt</code> after
+the <code>.in</code> extension. The CLI expects lowercase <code>.in</code>.</p>
+<p>If the first character produces an unexpected-character error, check the text
+encoding. Save UTF-8 <strong>without BOM</strong>.</p>
+<p>Once the source starts, file/import/asset paths inside the program are relative
+to its defining <code>.in</code> file, not to the terminal&#39;s folder. Keep the demo assets
+and local modules in the supplied folder structure.</p>
+<h2 id="troubleshooting-windows-build-and-dll-problems">Windows build and DLL problems</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Message</th>
+<th>Meaning and next step</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cargo</code> is not recognized</td>
+<td>Rust/Cargo is missing from this terminal; install Rust or reopen the terminal after installing it</td>
+</tr>
+<tr>
+<td>Microsoft linker/build tools are missing</td>
+<td>Install the MSVC C++ toolchain, including Desktop development with C++</td>
+</tr>
+<tr>
+<td><code>SDL2.lib</code> was not found in an x64 folder</td>
+<td>Use the SDL2 Visual C++ <strong>development</strong> package and point the helper at its extracted folder</td>
+</tr>
+<tr>
+<td><code>LNK1181: cannot open input file &#39;SDL2.lib&#39;</code></td>
+<td>The linker has no usable SDL2 search path; use the updated helper with encoded flags</td>
+</tr>
+<tr>
+<td>Windows reports missing <code>SDL2.dll</code></td>
+<td>Keep the x64 SDL2 DLL beside <code>indium.exe</code>; the build helper and installer copy it</td>
+</tr>
+<tr>
+<td>Access denied while replacing <code>indium.exe</code></td>
+<td>Close Indium processes before rebuilding, updating, or uninstalling</td>
+</tr>
+</tbody></table></div>
+<p>The original build helper incorrectly put literal quotes in <code>RUSTFLAGS</code>. The
+updated script uses <code>CARGO_ENCODED_RUSTFLAGS</code> to preserve paths with spaces.
+Download the updated project if you still have the original helper. Do not
+delete your working Windows build just to replace documentation files.</p>
+<p>The release ZIP&#39;s prebuilt Linux runtime is not a Windows executable. The
+standalone Windows setup installs an already-built Windows runtime; it does
+not compile one or download a replacement in the background.</p>
+<h2 id="troubleshooting-unknown-variable-or-read-only-name">Unknown variable or read-only name</h2>
+<p>Define a variable before using it, check spelling/capitalization, and consider
+scope. A variable created inside a block is not visible outside that block.
+Function declarations are hoisted, but captured variables still initialize in
+source order. Handler state should be declared before the handler.</p>
+<p>Built-ins and imports have read-only bindings. Use a different variable name
+instead of assigning to <code>print</code>, <code>input</code>, <code>text</code>, <code>math</code>, or another imported
+alias. A declared function name cannot be reassigned either.</p>
+<h2 id="troubleshooting-expected-integer-got-decimal">Expected integer, got decimal</h2>
+<p>The first assignment normally fixes a variable&#39;s runtime type. Division always
+produces a decimal, and functions such as <code>math.floor</code> also return decimals.</p>
+<p>Deliberately invalid example:</p>
+<pre><code class="language-indium">count = 10
+count = count / 2
+</code></pre>
+<p>Use a decimal binding if fractions are part of the program:</p>
+<pre><code class="language-indium">count = 10.0
+count = count / 2
+print(count)
+</code></pre>
+<p>Or explicitly convert a result with <code>integer(...)</code> when truncation is intended.
+Use <code>name: any = ...</code> only when changing types is intentional. Applying
+<code>any(value)</code> alone does not change a variable&#39;s declared type.</p>
+<h2 id="troubleshooting-conditions-require-booleans">Conditions require booleans</h2>
+<p>This fails because a number is not a boolean:</p>
+<pre><code class="language-indium">if 1 { print(&quot;not reached&quot;) }
+</code></pre>
+<p>Write <code>if count &gt; 0</code>, <code>if len(items) &gt; 0</code>, or an explicit boolean condition.
+<code>boolean(1)</code> is not a truthiness conversion. Also use <code>==</code> for equality;
+<code>is</code> is for a type, <code>none</code>, or a result state.</p>
+<h2 id="troubleshooting-result-has-the-other-state">Result has the other state</h2>
+<p>You accessed <code>.value</code> on an error, or <code>.error</code> on a success:</p>
+<pre><code class="language-indium">result = error(&quot;not found&quot;)
+print(result.value)
+</code></pre>
+<p>Check <code>result is success</code>, <code>result is error</code>, or <code>result.ok</code> first. Do not apply
+<code>is error</code> to an arbitrary integer/text value: state checks require a result.
+An invalid conversion or media operation is usually a diagnostic, not a result
+that can be caught with this pattern. See the standard-library return types.</p>
+<h2 id="troubleshooting-listmap-access-fails">List/map access fails</h2>
+<p>Lists/text use integer indexes starting at zero. <code>-1</code> is the last item. Maps use
+text keys. Index assignment does not extend a list. Reading a missing map key
+fails; use <code>contains(map, key)</code> first. Text is immutable.</p>
+<pre><code class="language-indium">items = [49]
+print(items[1])
+</code></pre>
+<p>Use <code>push(items, value)</code> to append. A range is lazy and cannot be indexed even
+though its coarse runtime type is <code>list</code>. There is no <code>items[1:3]</code> slice syntax.</p>
+<h2 id="troubleshooting-the-window-never-opens-or-drawing-fails">The window never opens or drawing fails</h2>
+<p>Set <code>mode = 2d</code> before scheduling. Let top-level initialization finish: a
+top-level infinite loop prevents the runtime from opening its window. Put
+ongoing logic in <code>every tick</code>/<code>every frame</code> handlers.</p>
+<p>Drawing during initialization fails:</p>
+<pre><code class="language-indium">mode = 2d
+renderer.clear(&quot;black&quot;)
+</code></pre>
+<p>Move drawing into <code>every frame { ... } loop</code>. Input polling also requires the
+initialized window, so put it in handlers. <code>every frame</code> without <code>mode = 2d</code>
+is an error. A terminal-only executable must be rebuilt with default features
+to gain graphics/audio support.</p>
+<p>An OpenGL/window creation failure may be a display, SDL, or driver problem.
+Check the backend message. The implementation explicitly requests OpenGL and
+does not silently switch to SDL&#39;s software renderer. <code>mode = 3d</code> is recognized
+but deliberately reports that it is not implemented.</p>
+<h2 id="troubleshooting-shapes-text-images-or-input-look-wrong">Shapes, text, images, or input look wrong</h2>
+<p>Clear once at the beginning of each frame, then draw in the order you want.
+Later drawing covers earlier drawing. Check X/Y positions and positive sizes.
+Color channels must be integer 0..255, and color names are lowercase.</p>
+<p>For colored text, use <code>renderer.text(&quot;label&quot;, x, y, 24, &quot;red&quot;)</code>. Passing the
+color as the fourth argument puts text where a numeric font size belongs.
+<code>renderer.image</code> takes either 3 or 5 arguments. Use PNG/JPEG/BMP and verify the
+source-relative asset path. Cached images do not automatically reload when a
+file changes during the same run.</p>
+<p>Use <code>key_down</code> for held movement and <code>key_pressed</code> for a one-time action. Focus
+loss clears input state. Tick/frame edge buffers are separate, but several
+catch-up ticks do not each count as a new press.</p>
+<h2 id="troubleshooting-there-is-no-sound">There is no sound</h2>
+<p>Check that the build includes media, the file is OGG/Vorbis or PCM WAV, the path
+is correct, the sound is mono/stereo, volume is above zero, and the playback
+device opens.</p>
+<p>A terminal program that ends immediately also stops its sound immediately.
+Use a short sleep in a terminal demo or keep a scheduler running. A paused
+voice reports <code>audio.playing(handle) == false</code>; that is expected. Completed
+handles also report false. There is no <code>audio.stop()</code> with zero arguments.</p>
+<p>Dummy-device testing verifies state/decoding but produces no audible sound.
+If the <code>SDL_AUDIODRIVER=dummy</code> test environment variable is set on your own
+machine, remove it before testing speakers.</p>
+<h2 id="troubleshooting-simulation-or-timers-seem-slow">Simulation or timers seem slow</h2>
+<p>TPS/FPS are requested rates rather than guaranteed throughput. Handlers execute
+on one thread. <code>sleep</code>, terminal input, HTTP, large file work, and heavy drawing
+delay other work. Use <code>game.dt</code> for fixed-tick movement and <code>time.dt</code> only when
+you intentionally want the last render-frame duration.</p>
+<p>Inspect <code>game.dropped_ticks</code> if the catch-up limit is discarding due ticks.
+Timers skip missed invocations rather than firing every overdue occurrence.
+See <a href="#scheduling">Scheduling</a>. <code>--frames</code> does not bound terminal-only timers;
+use a stop condition or <code>--max-steps</code> as appropriate.</p>
+<h2 id="troubleshooting-a-feature-or-familiar-syntax-is-missing">A feature or familiar syntax is missing</h2>
+<p>This release has no native <code>.in</code> compilation, package downloads, 3D, classes,
+structs, exceptions, async syntax, slicing, string interpolation, or JSON helper.
+<code>indium build</code>/<code>indium install</code> report explicit unfinished-feature messages.
+The <a href="#overview">handbook overview</a> separates current capabilities from plans.
+Prefer an implemented recipe to a guessed API that only resembles another
+language.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="windows" aria-label="Windows installation"><h1 id="windows-windows-installation">Windows installation</h1>
+<p>After the Windows build succeeds, double-click <strong>install-windows.cmd</strong> in the
+main Indium folder. Alternatively, download and double-click the standalone
+<strong>Install-Indium.cmd</strong>. The standalone installer finds the usual extracted
+<code>indium-prealpha\indium\target\release</code> folder beside it; otherwise, a file
+picker asks you to select your built <code>indium.exe</code>.</p>
+<p>The installer uses the Windows executable you have already built. It does not
+download or compile anything and does not require administrator permissions.</p>
+<p>It copies <code>indium.exe</code>, <code>SDL2.dll</code>, and the license notices into:</p>
+<pre><code class="language-text">%LOCALAPPDATA%\Programs\Indium
+</code></pre>
+<p>The <code>bin</code> subfolder is added to your <strong>user PATH</strong>, with no duplicate entry on
+reinstall. Other PATH entries, unexpanded environment references, and their
+registry value type are preserved. Windows is notified of the new environment.</p>
+<p>Close all terminal windows and open a new terminal. Then:</p>
+<pre><code class="language-powershell">indium --version
+indium run program.in
+</code></pre>
+<p>Run the second command in the folder containing <code>program.in</code>, or pass a relative
+or absolute path to your file. Indium itself can be found from any folder. Your
+source files do not have to be placed beside <code>indium.exe</code>.</p>
+<p>The installer configures the terminal command. It does not register a
+double-click association for <code>.in</code> source files; execute those with <code>indium run</code>.</p>
+<p>Already-running terminals and terminal host processes keep their old
+environment. If a completely reopened terminal still has the old PATH, sign
+out of Windows and sign back in. For immediate use in the existing PowerShell
+session, you can also run:</p>
+<pre><code class="language-powershell">$env:Path += &quot;;$env:LOCALAPPDATA\Programs\Indium\bin&quot;
+</code></pre>
+<h2 id="windows-updates-and-removal">Updates and removal</h2>
+<p>Run the installer again after building a new version. It updates the installed
+runtime without duplicating PATH. Close programs currently using Indium before
+updating or uninstalling.</p>
+<p>To remove Indium, use <strong>Settings &gt; Apps &gt; Installed apps &gt; Indium &gt; Uninstall</strong>.
+The uninstaller removes its installed runtime, registration, and PATH entry.
+It preserves the original project build, your <code>.in</code> programs, and unknown files
+inside the installation directory. It does not recursively delete the folder.</p>
+<h2 id="windows-explicit-command-line-options">Explicit command-line options</h2>
+<p>Run from the source project&#39;s main directory:</p>
+<pre><code class="language-powershell">.\scripts\install-windows.ps1 -SourceDir .\target\release
+.\scripts\install-windows.ps1 -SourceDir .\target\release -InstallDir &quot;$env:LOCALAPPDATA\Programs\Indium&quot;
+&amp; &quot;$env:LOCALAPPDATA\Programs\Indium\setup.ps1&quot; -Uninstall
+</code></pre>
+<p>The installer needs both <code>indium.exe</code> and <code>SDL2.dll</code>, plus the original license
+notices in the source/release folder. Building the executable still requires
+Rust, the MSVC C++ build tools, and the SDL2 Visual C++ development package. See
+the main README. The runtime does not need Rust once it has been built.</p>
+<p>The scripts support Windows PowerShell 5.1. Their PATH and file operations were
+tested using PowerShell Core on Linux with native Windows calls mocked. Actual
+Windows registry updates, the file picker, Installed Apps integration, and
+environment broadcasts still need a Windows installation smoke test.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="project" aria-label="Building and project README"><h1 id="project-indium">Indium</h1>
+<p>A real, working pre-alpha of Indium, written in Rust. Source files use <code>.in</code> and
+the executable is <code>indium</code>. This release executes programs with a tree-walking
+interpreter.</p>
+<pre><code class="language-indium">mode = terminal
+
+fn greet(who: text) {
+    print(&quot;Hello, &quot; + who + &quot;!&quot;)
+}
+
+greet(&quot;Indium&quot;)
+</code></pre>
+<h2 id="project-documentation">Documentation</h2>
+<p>Start with the <a href="#overview">Indium handbook</a> for a complete guide to the
+implemented language. The release ZIP also includes <strong>docs/guide.html</strong>, a
+self-contained offline copy you can open in your browser.</p>
+<ul>
+<li><a href="#getting-started">Getting started</a>: installation, folders, first program.</li>
+<li><a href="#language">Language</a>: syntax, types, collections, functions, modules.</li>
+<li><a href="#library">Standard library</a>: every current function and property.</li>
+<li><a href="#media">Graphics and audio</a>, <a href="#scheduling">scheduling</a>,
+<a href="#cli">CLI</a>, <a href="#recipes">recipes</a>, and <a href="#troubleshooting">troubleshooting</a>.</li>
+</ul>
+<h2 id="project-what-works">What works</h2>
+<ul>
+<li>Lexer, parser, lexical scopes, variables with inferred or annotated types.</li>
+<li>Signed 64-bit integers, finite decimals, text, booleans, <code>none</code>.</li>
+<li>Arithmetic, comparisons, short-circuit logic, useful type and result-state checks.</li>
+<li>Functions, closures, recursion, typed parameters and return values.</li>
+<li>Conditions, <code>while</code>, <code>for</code>, ranges, <code>loop</code>, <code>break</code>, <code>continue</code>, <code>return</code>.</li>
+<li>Mutable lists and maps, Unicode text, first-class functions.</li>
+<li>Built-in modules and cached, relative <code>.in</code> imports with cycle diagnostics.</li>
+<li>Terminal and background execution; OpenGL-backed 2D windows and input.</li>
+<li>Rectangles, lines, circles, PNG/JPEG/BMP images, and Unicode text rendering.</li>
+<li>Borderless/exclusive fullscreen controls, FPS limits, VSync configuration.</li>
+<li>Built-in OGG/Vorbis and PCM WAV audio, multiple voices, pause/resume/stop/volume.</li>
+<li>Independent simulation ticks, rendering frames, and recurring timers.</li>
+<li>Files, math, text helpers, and blocking HTTP through the installed <code>curl</code> program.</li>
+<li><code>run</code>, <code>check</code>, <code>tokens</code>, <code>--help</code>, and <code>--version</code> commands.</li>
+</ul>
+<p>Graphics and audio need no Indium imports or packages. <code>import game</code> enables the
+game namespace. All these features belong to the same language and runtime.</p>
+<h2 id="project-build-and-run">Build and run</h2>
+<p>On Windows, after building once, double-click <strong>install-windows.cmd</strong> to install
+Indium for your account and add it permanently to PATH. Reopen your terminal,
+then use <code>indium run program.in</code>. The standalone <strong>Install-Indium.cmd</strong> does the
+same for an existing Windows build. See <a href="#windows">Windows installation</a>.</p>
+<p>This snapshot includes a tested Ubuntu 24.04 x86-64 binary. On a compatible Linux
+system, use <code>./indium-linux run examples/hello.in</code> without building Rust first.
+See <a data-project-file="prebuilt/README.md" title="Included in the project ZIP">prebuilt/README.md</a>. Other platforms use the source build
+instructions below.</p>
+<p>Use a current stable Rust toolchain (Cargo included) and the SDL2 development
+library. Image decoding, fonts, and OGG/WAV decoding are Rust dependencies; this
+project does <strong>not</strong> require SDL2_image, SDL2_ttf, or SDL2_mixer.</p>
+<p>On Ubuntu/Debian:</p>
+<pre><code class="language-sh">sudo apt-get install build-essential libsdl2-dev
+cargo build --release --locked
+./target/release/indium run examples/hello.in
+./target/release/indium run examples/2d.in
+</code></pre>
+<p>On macOS, install SDL2 with <code>brew install sdl2</code>, then build using Cargo.</p>
+<p>On Windows with Rust&#39;s MSVC toolchain and Visual Studio C++ Build Tools installed:</p>
+<ol>
+<li>Download the <strong>Visual C++ development package</strong> for SDL2 from
+<a href="https://github.com/libsdl-org/SDL/releases">https://github.com/libsdl-org/SDL/releases</a> (choose an SDL2 release).</li>
+<li>Extract it, then run the provided helper with the extracted SDL2 directory:</li>
+</ol>
+<pre><code class="language-powershell">.\scripts\build-windows.ps1 -Sdl2Root C:\path\to\SDL2
+.\target\release\indium.exe run examples\hello.in
+.\target\release\indium.exe run examples\2d.in
+</code></pre>
+<p>The helper finds <code>SDL2.lib</code> and copies <code>SDL2.dll</code> beside the executable. It uses
+encoded compiler arguments so SDL2 paths containing spaces are passed correctly.
+Use the x64 Rust toolchain and x64 SDL2 libraries. The user has successfully built
+and run the terminal example on Windows. Windows graphics/audio and macOS builds
+have not been tested on physical desktop systems here.</p>
+<p>A terminal-only build needs no SDL2 development library:</p>
+<pre><code class="language-sh">cargo build --release --locked --no-default-features
+./target/release/indium run examples/hello.in
+</code></pre>
+<p>For a Linux/macOS installed CLI, use <code>cargo install --path . --locked</code> after
+setting up SDL2. On Windows, use the installer above so <code>SDL2.dll</code> is copied too.
+All asset and file paths inside a program are relative to its <code>.in</code> source file,
+including inside an imported module.</p>
+<h2 id="project-cli">CLI</h2>
+<pre><code class="language-text">indium run examples/hello.in
+indium run examples/2d.in --frames 120
+indium run examples/hello.in --max-steps 100000
+indium run my-program.in -- first-argument second-argument
+indium check examples/imports.in
+indium tokens examples/hello.in
+indium --version
+indium --help
+</code></pre>
+<p><code>check</code> parses and checks the entire local module graph without executing it.
+It checks names, known types, declared signatures, scopes, and control flow.
+Dynamic calls and values obtained from module fields or collections are checked
+at runtime. It is not a proof that a program will run without errors.</p>
+<p><code>build</code> and <code>install</code> currently exit with an explicit “not implemented” error.
+They do not silently produce a launcher or pretend to install packages.</p>
+<h2 id="project-try-the-media-demo">Try the media demo</h2>
+<pre><code class="language-indium">mode = 2d
+import game
+
+window.title = &quot;Indium&quot;
+window.fps = 144
+window.vsync = false
+game.tps = 240
+x = 0.0
+
+every tick {
+    x += 100 * game.dt
+    if x &gt; window.width { x = 0.0 }
+} loop
+
+every frame {
+    renderer.clear(&quot;#11121b&quot;)
+    renderer.circle(x, 200, 24, &quot;indium&quot;)
+    renderer.text(&quot;Hello from OpenGL&quot;, 24, 24)
+    if input.key_pressed(&quot;escape&quot;) { stop() }
+} loop
+</code></pre>
+<p>The larger <code>examples/2d.in</code> demo also includes OGG sound on Space, fullscreen on
+F11, and arrow-key speed controls. <code>examples/audio.in</code> exercises both audio
+formats. The included sound and checkerboard assets are original test fixtures,
+not a final logo or borrowed music.</p>
+<h2 id="project-tests">Tests</h2>
+<pre><code class="language-sh">cargo test --locked
+cargo fmt --check
+cargo clippy --all-targets -- -D warnings
+</code></pre>
+<p>The OpenGL integration test is opt-in because it needs a usable display:</p>
+<pre><code class="language-sh">cargo test --lib -- --ignored --test-threads=1
+</code></pre>
+<p>For headless Mesa systems, it can also be run with:</p>
+<pre><code class="language-sh">SDL_VIDEODRIVER=offscreen LIBGL_ALWAYS_SOFTWARE=1 \
+  cargo test --lib -- --ignored --test-threads=1
+SDL_AUDIODRIVER=dummy ./target/debug/indium run examples/audio.in
+</code></pre>
+<p>See <a href="#validation">docs/validation.md</a> for the checks actually performed,
+<a href="#language">docs/language.md</a> for syntax and semantics, and
+<a href="#library">docs/standard-library.md</a> for the implemented APIs.</p>
+<h2 id="project-current-limits">Current limits</h2>
+<p>This is a working foundation, not a completed Alpha 1.0 release. There is no
+native compiler, 3D runtime, package registry, AI module, Discord module, or
+Vulkan backend. Background mode uses the same process as terminal mode; it does
+not detach or hide an inherited Windows console. Long audio tracks are decoded
+in memory rather than streamed. Input, graphics, and timing still need testing
+on physical Windows/macOS machines and audio devices.</p>
+<p>The implementation uses runtime type checks alongside a conservative semantic
+pass, not a complete static type system. It has explicit recursion/depth limits,
+and no tracing garbage collector. See the language guide for details.</p>
+<p>No open-source license has been selected. The creator retains rights to this
+project&#39;s original source code. Third-party software and the bundled DejaVu font
+retain their respective licenses; see <a href="#third-party">THIRD_PARTY.md</a>.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="architecture" aria-label="Implementation map"><h1 id="architecture-implementation-map">Implementation map</h1>
+<p><code>main.rs</code> handles CLI arguments and file loading. <code>loader.rs</code> canonicalizes paths,
+loads/checks the local import graph, detects cycles, and retains source text for
+runtime diagnostics. It never executes programs during <code>check</code>.</p>
+<p><code>lexer.rs</code> produces UTF-8-aware tokens with byte offsets and line/column spans.
+<code>parser.rs</code> uses a Pratt expression parser and structured statement parser.
+<code>ast.rs</code> defines the syntax tree, basic type vocabulary, and recurring events.</p>
+<p><code>checker.rs</code> checks lexical names, known scalar types, annotations, function
+arity, scope rules, and control-flow placement. It hoists function declarations
+and checks their bodies after the enclosing declarations. Dynamic values remain
+runtime-checked; the pass is intentionally not described as a complete static
+type inference system.</p>
+<p><code>interpreter.rs</code> executes the AST. It implements lexical closures, functions,
+control flow, checked arithmetic, indexed assignment, module caching, and source
+error stacks. Assignment targets are evaluated once before the right-hand side.
+The runtime uses reference-counted lexical environments and collection values.
+It has instruction, nesting, evaluation, and call guards rather than relying on
+host stack overflows or raw Rust panics for normal program errors.</p>
+<p><code>runtime/scheduler.rs</code> drives independent tick and render deadlines, with bounded
+catch-up and timer cadence. Handlers share lexical state and run on one thread.
+The fixed-step accumulator is also tested independently from wall-clock time.</p>
+<p><code>stdlib</code> exposes built-ins and modules through a consistent value/call interface.
+File/HTTP operational failures use explicit success/error results. Networking
+launches curl with individual arguments.</p>
+<p><code>media/backend.rs</code> uses rust-sdl2 to create an actual OpenGL renderer. CPU-decoded
+images and font rasters are cached; GPU resources created for a draw are scoped
+and freed. The SDL offscreen resize path rebuilds its pbuffer-backed window;
+native desktop drivers preserve their context on resize.</p>
+<p><code>media/audio.rs</code> uses Symphonia to decode OGG/Vorbis and PCM WAV into cached audio
+clips. An SDL audio callback mixes voices with per-voice gain, pause/loop state,
+and linear sample-rate conversion. Audio uses an internal callback thread while
+language code runs on the runtime thread; shared mixer state is protected by a
+mutex. The device is opened only on demand and paused before destruction.</p>
+<h2 id="architecture-deliberate-boundaries">Deliberate boundaries</h2>
+<ul>
+<li>This is its own language implementation, not translation into a host language
+for execution, and not a collection of hard-coded example programs.</li>
+<li>No fake native build command, package installer, 3D renderer, or AI API.</li>
+<li>No browser playground, external website, or separate game editor.</li>
+<li>No project GitHub changes or remote pushes in this development session.</li>
+<li>The source snapshot uses system SDL2 rather than requiring three SDL extension
+libraries. Image, font, and audio codec work uses Rust crates.</li>
+</ul>
+<h2 id="architecture-next-implementation-priorities">Next implementation priorities</h2>
+<ol>
+<li>Test Windows/macOS windows, physical input, fullscreen, and real audio output;
+provide binaries for those platforms after verification.</li>
+<li>Improve static type propagation through imported exports, dynamic calls, and
+collection access. Add user-defined data types and a coherent error model.</li>
+<li>Introduce a tracing collector or equivalent cycle reclamation, and reduce
+interpreter overhead with bytecode or another measured execution approach.</li>
+<li>Keep GPU textures persistent, batch drawing, stream long music tracks, and
+expand runtime tests before adding 3D model formats.</li>
+<li>Add genuine native compilation with an explicit supported subset, then grow
+it toward language/runtime parity. Do not package an interpreter as a native
+compilation result and call that machine-code compilation of source.</li>
+<li>Add 3D, package management, AI training, Discord convenience modules, and an
+optional Vulkan backend in the project&#39;s chosen priority order.</li>
+</ol>
+<h2 id="architecture-rust-library-entry-points">Rust library entry points</h2>
+<p>The project is both a CLI binary and a Rust library crate. <code>src/lib.rs</code> exports
+the lexer, parser, checker, loader, interpreter, runtime, media, and standard
+library modules. These are pre-alpha implementation APIs, not a stable embedding
+contract.</p>
+<p>The convenience helper <code>indium::run_source(source)</code> checks a source string,
+executes it, captures normal terminal output, and returns <code>Result&lt;String&gt;</code>.
+It sets a one-million-step execution budget. It is used throughout the language
+tests:</p>
+<pre><code class="language-rust">let output = indium::run_source(&quot;print(49)\n&quot;).unwrap();
+assert_eq!(output, &quot;49\n&quot;);
+</code></pre>
+<p>Local file imports need a real defining file path, so <code>run_source</code> rejects
+programs containing them. For file-backed execution, use
+<code>loader::compile_file(Path::new(&quot;program.in&quot;))</code>, create an
+<code>interpreter::Interpreter</code> with that program and <code>interpreter::Options</code>, and call
+its <code>run()</code> method. The options control output capture and step/frame limits.
+The loader&#39;s <code>compile_file</code> name means parsing/checking into this interpreter&#39;s
+program representation; it does not generate machine code.</p>
+<p>Diagnostics retain source spans, filenames, messages, and call notes. <code>render</code>
+can combine one with source text to produce the same kind of caret display the
+CLI uses. Error results produced by Indium programs are separate language values,
+not Rust loader/interpreter diagnostics.</p>
+<h2 id="architecture-maintaining-the-handbook">Maintaining the handbook</h2>
+<p>Edit the Markdown files in <code>docs/</code> and keep examples aligned with the current
+implementation. The documentation checker compares exported callable/property
+names with the guide, verifies local links, checks complete code blocks, runs
+the explicitly marked safe blocks, and checks all shipped example files.
+Interactive, filesystem-writing, and public-network snippets are not run
+automatically; the new interactive game gets controlled test input separately.</p>
+<pre><code class="language-sh">python3 scripts/check-docs.py --graphics
+</code></pre>
+<p><code>--graphics</code> runs marked drawing examples with offscreen Mesa and a dummy audio
+device. Omit it on a system without that headless driver; the graphics source
+is still checked. Pass <code>--interpreter PATH</code> to choose an executable,
+<code>--verbose</code> to inspect outputs, or <code>--report PATH.json</code> to retain a report.</p>
+<p>The HTML builder needs Node.js and the <code>marked</code> Markdown renderer. Runtime use
+of Indium and reading the already-built handbook need neither:</p>
+<pre><code class="language-sh">npm install --prefix .doc-tools --no-save --no-package-lock marked
+node scripts/build-guide.mjs
+python3 scripts/package.py --output-dir /path/to/output-folder
+</code></pre>
+<p>The builder combines the chapters into <code>docs/guide.html</code>, embeds its styles,
+rewrites chapter links to internal anchors, and validates those anchors. The
+packager includes that generated file with the Markdown source, examples,
+existing Linux binary, Windows setup helpers, local Git bundle, and checksums.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="validation" aria-label="Validation record"><h1 id="validation-validation-for-010-alpha1">Validation for 0.1.0-alpha.1</h1>
+<p>Development snapshot: 2026-10-29. The project was implemented and tested locally.
+No GitHub repository changes, pushes, or external publishing were performed.</p>
+<h2 id="validation-environment">Environment</h2>
+<ul>
+<li>Linux x86-64, Ubuntu 24.04 userspace.</li>
+<li>Rust/Cargo 1.99.1.</li>
+<li>SDL2 2.30, OpenGL through SDL&#39;s explicit <code>opengl</code> renderer.</li>
+<li>Mesa software OpenGL with <code>SDL_VIDEODRIVER=offscreen</code> for graphical checks.</li>
+<li><code>SDL_AUDIODRIVER=dummy</code> for playback-state smoke tests.</li>
+</ul>
+<p>The environment had the SDL2 runtime but no development linker alias. Local
+build/test commands added <code>RUSTFLAGS=&#39;-L native=/tmp/indium-native/lib&#39;</code> pointing
+to an SDL2 linker alias. This environment-specific path is not required on a
+normal system with SDL2 development libraries installed and is not a project
+configuration setting.</p>
+<h2 id="validation-automated-checks-actually-completed">Automated checks actually completed</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cargo test --locked</code> with default media features</td>
+<td>59 passed; one display-dependent test intentionally excluded from this invocation</td>
+</tr>
+<tr>
+<td><code>cargo test --no-default-features --locked</code></td>
+<td>57 passed</td>
+</tr>
+<tr>
+<td>Opt-in OpenGL test, explicitly run with offscreen Mesa</td>
+<td>1 passed</td>
+</tr>
+<tr>
+<td><code>cargo fmt --check</code></td>
+<td>Passed</td>
+</tr>
+<tr>
+<td><code>cargo clippy --all-targets --locked -- -D warnings</code></td>
+<td>Passed</td>
+</tr>
+<tr>
+<td><code>cargo build --release --locked</code></td>
+<td>Passed</td>
+</tr>
+<tr>
+<td><code>indium check</code> on every shipped example/fixture <code>.in</code> file</td>
+<td>12 source files checked</td>
+</tr>
+<tr>
+<td>Packaged Linux launcher <code>--version</code> and <code>run examples/hello.in</code></td>
+<td>Passed</td>
+</tr>
+</tbody></table></div>
+<p>There are <strong>60 distinct automated tests</strong> exercised across the default suite and
+its opt-in graphics test. The terminal-only run repeats applicable tests; it is
+not 57 additional distinct tests.</p>
+<p>Coverage includes lexical tokens/locations, malformed input, precedence,
+inference/annotations, arithmetic errors, booleans, conditionals, lexical scopes,
+functions/closures, recursion guards, loop control, collections, single evaluation
+of assignment targets, Unicode, results, imports/cycles/cached mutable module
+state, filesystem operations, real local HTTP GET/POST requests, CLI failures,
+timer/tick execution, and simulated 240 TPS at 30/60/144/240/360 rendering FPS.</p>
+<p>Audio tests decode the actual included OGG/Vorbis and PCM WAV files, verify their
+sample rate/duration/energy, and exercise a mixer with concurrent, looping,
+paused, completed, and clipped voices. The SDL dummy-device smoke program checks
+play/pause/resume/volume/stop/playing for both formats. It does <strong>not</strong> establish
+that speakers emitted correct audible sound.</p>
+<p>The OpenGL test checks the selected backend, injected key events, independent
+tick/frame press edges, resize state, borderless fullscreen state transitions,
+and framebuffer pixel colors. Fullscreen passed in this offscreen environment;
+exclusive fullscreen and monitor-specific behavior remain unverified.</p>
+<h2 id="validation-programs-executed-successfully">Programs executed successfully</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Verified behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>examples/hello.in</code></td>
+<td>Greeting and range sum of 55</td>
+</tr>
+<tr>
+<td><code>examples/factorial.in</code></td>
+<td>Values 0! through 20!</td>
+</tr>
+<tr>
+<td><code>examples/imports.in</code></td>
+<td>Imported geometry functions, including 4 × 6 = 24</td>
+</tr>
+<tr>
+<td><code>examples/collections.in</code></td>
+<td>Mutable lists/maps, iteration, text helpers</td>
+</tr>
+<tr>
+<td><code>examples/files.in</code></td>
+<td>Write/read a real text file; generated file then removed</td>
+</tr>
+<tr>
+<td><code>examples/timer.in</code></td>
+<td>Three one-second recurring invocations, then stop</td>
+</tr>
+<tr>
+<td><code>examples/audio.in</code></td>
+<td>OGG and WAV playback states using SDL&#39;s dummy device</td>
+</tr>
+<tr>
+<td><code>examples/2d.in</code></td>
+<td>Twelve real OpenGL frames with shapes, image, text, tick updates</td>
+</tr>
+<tr>
+<td><code>tests/fixtures/render.in</code></td>
+<td>Rendered PNG inspected visually and checked for exact pixels</td>
+</tr>
+<tr>
+<td><code>tests/fixtures/fullscreen.in</code></td>
+<td>Resize/fullscreen transitions; final 400 × 300 PNG and pixel colors checked</td>
+</tr>
+</tbody></table></div>
+<p><code>examples/http.in</code> was checked but its public internet request was not executed.
+Networking execution was verified against a local test server with actual curl
+GET and POST subprocesses. The 2D demo&#39;s physical keyboard/speaker interactions
+were not manually exercised; keyboard state was verified with injected SDL events.</p>
+<h2 id="validation-still-unverified-or-incomplete">Still unverified or incomplete</h2>
+<ul>
+<li>Windows graphics/audio and macOS builds. The user built Indium successfully
+on Windows with Rust/MSVC and SDL2, then ran the hello example. That exposed
+a quoting bug in the original Windows build helper, now fixed with encoded
+compiler arguments. The prebuilt executable in this ZIP is Linux x86-64 only.</li>
+<li>Real speakers/headphones, hardware GPU drivers, monitor refresh behavior,
+physical mouse/keyboard interaction, and exclusive fullscreen.</li>
+<li>Performance/long-running memory behavior. Reference cycles are not collected;
+images/text upload textures per draw; audio is cached in memory, not streamed.</li>
+<li>Native compilation of <code>.in</code> programs, 3D/model loading, a package manager,
+AI training modules, Discord modules, Vulkan, and an official language website.</li>
+</ul>
+<p>Those are explicit remaining tasks, not features claimed to be completed.</p>
+<h2 id="validation-windows-setup-update">Windows setup update</h2>
+<p><code>scripts/test-windows-setup.ps1</code> exercises real filesystem installation,
+reinstallation, upgrades, source validation, uninstall preservation, marker and
+symlink protection, and long/quoted/case-varied PATH transformations. It also
+executes the build helper with a mocked Cargo command to check SDL paths with
+spaces, argument preservation, DLL copying, and error cleanup. Native registry,
+environment notification, and executable version calls are mocked explicitly.</p>
+<p>All <strong>35 setup checks passed</strong> under PowerShell 7.6.9 on Linux. They do not establish that the
+Windows file picker, user registry writes, Installed Apps entry, or broadcast
+works on a native Windows desktop. The new installer needs that final smoke test.</p>
+<h2 id="validation-documentation-update">Documentation update</h2>
+<p>The expanded handbook was checked against the shipped interpreter and source
+API inventory, without changing the Rust language implementation.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Documentation check</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Markdown files examined, including project README</td>
+<td>13</td>
+</tr>
+<tr>
+<td>Callable names covered, including aliases/conversions</td>
+<td>88</td>
+</tr>
+<tr>
+<td>Namespace properties covered</td>
+<td>21</td>
+</tr>
+<tr>
+<td>Local Markdown links checked</td>
+<td>43</td>
+</tr>
+<tr>
+<td>Complete Indium code blocks verified</td>
+<td>45</td>
+</tr>
+<tr>
+<td>Valid code blocks executed</td>
+<td>26, including two three-frame offscreen graphics programs</td>
+</tr>
+<tr>
+<td>Deliberately failing examples verified to fail</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Explicitly labeled partial fragments</td>
+<td>5; excluded from standalone checking</td>
+</tr>
+<tr>
+<td>Shipped example files checked</td>
+<td>14</td>
+</tr>
+<tr>
+<td>New tutorial programs executed</td>
+<td>4; the guessing game received controlled stdin</td>
+</tr>
+<tr>
+<td>Offline HTML book</td>
+<td>14 chapters; generated internal anchors checked</td>
+</tr>
+</tbody></table></div>
+<p>The documentation checker runs source snippets in temporary files and copies
+example fixtures into a disposable directory. Filesystem-writing and public
+HTTP snippets are checked rather than executed. These checks do not add physical
+keyboard, speaker, GPU-driver, or Windows-installer verification.
+The offline handbook&#39;s structure and links were validated. A browser visual
+pass could not be completed because the environment&#39;s browser download was
+unavailable; the layout is not claimed to have been visually verified here.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+<section class="chapter" id="third-party" aria-label="Third-party components"><h1 id="third-party-third-party-notices">Third-party notices</h1>
+<p>The Rust dependency versions are recorded in Cargo.lock. Each dependency keeps
+its own license; no dependency&#39;s license transfers ownership of Indium&#39;s
+original code to its authors.</p>
+<p>Direct dependencies:</p>
+<ul>
+<li>rust-sdl2 and sdl2-sys: MIT; bindings to SDL2.</li>
+<li>SDL2 itself: zlib license (supplied by the system or by the user on Windows).</li>
+<li>image: MIT OR Apache-2.0.</li>
+<li>fontdue: MIT OR Apache-2.0 OR Zlib.</li>
+<li>Symphonia: MPL-2.0. It is used as an unmodified dependency, not copied into
+this project&#39;s original Rust source.</li>
+</ul>
+<p>The bundled DejaVu Sans font is supplied with the full license text at
+assets/DejaVu-LICENSE.txt. That notice also covers the upstream Bitstream font
+license. Keep it with redistributed font bytes.</p>
+<p>examples/assets/README.md describes the original CC0 sound/image fixtures.
+The full Cargo metadata and locked dependency source URLs are available using
+<code>cargo metadata --locked</code>. No third-party dependency sources are vendored in
+this source snapshot.</p>
+<p class="chapter-end"><a href="#contents">Back to contents</a></p></section>
+</main></body></html>

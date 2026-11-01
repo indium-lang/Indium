@@ -1,0 +1,15 @@
+mode = 2d
+import game
+window.width=320
+window.height=240
+window.vsync=false
+window.fps=60
+every frame {
+ if game.frames==2 {window.width=400
+window.height=300}
+ if game.frames==4 {window.fullscreen=true}
+ if game.frames==6 {window.fullscreen=false}
+ renderer.clear("#101020")
+ renderer.rect(10,10,40,30,"red")
+ if game.frames==8 {renderer.save("fullscreen-output.png")}
+} loop
