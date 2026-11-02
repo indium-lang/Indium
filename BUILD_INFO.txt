@@ -1,8 +1,0 @@
-Indium 0.1.0-alpha.1
-Source commit: d987aa475ef3864adac54b94f896424100fe6ba1
-Source changes and history are local. No GitHub pushes.
-Linux runtime: Ubuntu 24.04 x86-64, Rust 1.99.1, SDL2 2.30.
-Windows setup installs an existing Windows build and adds user PATH.
-Windows executable is not included; the user has built and run it locally.
-Installer logic: tested on PowerShell Core/Linux with native Windows calls mocked.
-Native Windows registry, GUI, and environment broadcast: not executed here.
