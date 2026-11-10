@@ -9,11 +9,11 @@ indium is currently quite unfinished, dont expect too much and please read the d
 INDIUM IS OUT!!!!!!!!!!!!
 ## Star History
 
-<a href="https://www.star-history.com/?repos=indium-lang%2Findium&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=indium-lang%2Findium&type=timeline&releases=&legend=bottom-right">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=indium-lang/indium&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=indium-lang/indium&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=indium-lang/indium&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=indium-lang/indium&type=timeline&theme=dark&legend=bottom-right" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=indium-lang/indium&type=timeline&legend=bottom-right" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=indium-lang/indium&type=timeline&legend=bottom-right" />
  </picture>
 </a>
 
