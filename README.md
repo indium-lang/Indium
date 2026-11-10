@@ -16,4 +16,5 @@ INDIUM IS OUT!!!!!!!!!!!!
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=indium-lang/indium&type=date&legend=top-left" />
  </picture>
 </a>
+
 (no but like actually pls read the docs they have everything like install commands and everything abt the language)
